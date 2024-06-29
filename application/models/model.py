@@ -19,6 +19,23 @@ class Questions(db.Model):
     answer3 = db.Column(db.String(255))
     answer4 = db.Column(db.String(255))
 
+    def serialize(self):
+        return {
+            "number": self.number,
+            "weeknumber": self.weeknumber,
+            "type": self.type,
+            "question": self.question,
+            "code_snippet": self.code_snippet,
+            "option1": self.option1,
+            "option2": self.option2,
+            "option3": self.option3,
+            "option4": self.option4,
+            "answer1": self.answer1,
+            "answer2": self.answer2,
+            "answer3": self.answer3,
+            "answer4": self.answer4
+        }
+
 
 class CourseContent(db.Model):
     __tablename__ = 'coursecontent'
@@ -29,3 +46,14 @@ class CourseContent(db.Model):
     title = db.Column(db.String(255),nullable = False)
     link = db.Column(db.String(255),nullable = False)
     transcript = db.Column(db.String,nullable = False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "week": self.week,
+            "index": str(self.index),
+            "type": self.type,
+            "title": self.title,
+            "link": self.link,
+            "transcript": self.transcript
+        }
