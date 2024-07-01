@@ -7,6 +7,7 @@ import FirstLecture from '@/pages/FirstLecture.vue';
 import SecondLecture from '@/pages/SecondLecture.vue';
 import GradedAssign from '@/pages/GradedAssign.vue';
 import ProgAssign from '@/pages/ProgAssign.vue';
+import CodeEditor  from '@/components/CodeEditor.vue';
 
 const routes = [
   { path: '/', component: DashBoard },
@@ -21,6 +22,7 @@ const routes = [
       { path: 'graded-assignment', component: GradedAssign },
       { path: 'ppa1', component: ProgAssign },
       { path: '', redirect: 'about' },
+      {path: '/CodeEditor', component: CodeEditor}
     ],
   },
 ];

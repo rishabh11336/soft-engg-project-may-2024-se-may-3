@@ -4,23 +4,39 @@
       <img :src="moduleLogo" alt="module" />
       <div>Module</div>
     </div>
-    <div class="module">
+    <div class="module"  @click="openModal">
       <img :src="codeIDELogo" alt="module" />
 
       <div>Code IDE</div>
     </div>
+    <IdeModal :show="isModalOpen" @close="isModalOpen = false">
+      <CodeEditor />
+    </IdeModal>
   </div>
 </template>
 <script>
+import IdeModal from './IdeModal.vue';
+import CodeEditor from './CodeEditor.vue';
 import moduleLogo from '../assets/module.png';
 import codeIDELogo from '../assets/ide.png';
 export default {
   name: 'SideBar',
+  components: {
+    IdeModal,
+    CodeEditor,
+  },
   data() {
     return {
       moduleLogo,
       codeIDELogo,
+      isModalOpen: false,
     };
+  },
+  methods: {
+    openModal() {
+      console.log("Modal toggled")
+      this.isModalOpen = true;
+    },
   },
 };
 </script>
