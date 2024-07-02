@@ -6,8 +6,8 @@
       <iframe
         width="960"
         height="480"
-        src="https://www.youtube.com/watch?v=p7iwXvBnbIE"
-        title="lecture.title"
+        :src= "lecture.link"
+        :title="lecture.title"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin"
