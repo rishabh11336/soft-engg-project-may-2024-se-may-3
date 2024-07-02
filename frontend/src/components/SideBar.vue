@@ -1,11 +1,19 @@
 <template>
   <div class="sidebar">
-    <div class="module active">
+    <div
+      :class="{ active: activeTab === 'module' }"
+      class="module"
+      @click="activeTab = 'module'"
+    >
       <img :src="moduleLogo" alt="module" />
       <div>Module</div>
     </div>
-    <div class="module">
-      <img :src="codeIDELogo" alt="module" />
+    <div
+      :class="{ active: activeTab === 'ide' }"
+      class="module"
+      @click="activeTab = 'ide'"
+    >
+      <img :src="codeIDELogo" alt="ide" />
 
       <div>Code IDE</div>
     </div>
@@ -20,6 +28,7 @@ export default {
     return {
       moduleLogo,
       codeIDELogo,
+      activeTab: 'module',
     };
   },
 };
@@ -27,16 +36,17 @@ export default {
 <style>
 .sidebar {
   width: max-content;
-  height: 881px;
   overflow-y: auto;
-  top: 16px;
-  bottom: 16px;
-  width: max-content;
   background-color: #49516c;
   padding-top: 12px;
   padding-bottom: 12px;
   border-right: solid 1px rgba(0, 0, 0, 0.12);
   margin-right: 10px;
+  position: fixed;
+  margin-left: -10px;
+  margin-top: 25px;
+  height: 100%;
+  z-index: 0;
 }
 
 .sidebar .module {
@@ -49,7 +59,7 @@ export default {
   position: relative;
 }
 
-.sidebar .active div {
+.sidebar div.active div {
   color: coral !important;
 }
 

@@ -13,7 +13,8 @@ export default {
 .content-container {
   margin-left: 30px;
   margin-right: 30px;
-  margin-top: 20px;
-  width: calc(100% - 400px);
+  height: 880px;
+  margin-top: 55px;
+  overflow: hidden;
 }
 </style>

@@ -1,91 +1,87 @@
 <template>
-  <div>
+  <div v-if="assignments">
     <h2>Graded Assignment 1</h2>
     <div class="assignment-wrapper">
       <strong
         >You may submit any number of times before the due date. The final
         submission will be considered for grading.
       </strong>
-      <div class="question-answer">
+      <div
+        class="question-answer"
+        v-for="question in assignments"
+        :key="question.number"
+      >
         <div class="question-wrapper">
-          <p>1. What is the type of the following expression?</p>
+          <p>{{ question.question }}</p>
           <strong>1 point</strong>
         </div>
-        <div class="question">1 | 1 + 4 / 2</div>
-        <div>
-          <input type="radio" name="quest1" id="answer" />
-          <p>int</p>
+        <div class="question">{{ question.code_snippet }}</div>
+        <div v-if="question.type === 'Multi-choice'">
+          <div v-if="question.option4">
+            <input type="radio" :name="question.number" id="option1" />
+            <label for="option1">{{ question.option1 }}</label>
+          </div>
+          <div v-if="question.option4">
+            <input type="radio" :name="question.number" id="option2" />
+            <label for="option2">{{ question.option2 }}</label>
+          </div>
+          <div v-if="question.option4">
+            <input type="radio" :name="question.number" id="option3" />
+            <label for="option3">{{ question.option3 }}</label>
+          </div>
+          <div v-if="question.option4">
+            <input type="radio" :name="question.number" id="option4" />
+            <label for="option4">{{ question.option4 }}</label>
+          </div>
         </div>
-        <div>
-          <input type="radio" name="quest1" id="answer" />
-          <p>float</p>
-        </div>
-        <div>
-          <input type="radio" name="quest1" id="answer" />
-          <p>str</p>
-        </div>
-        <div>
-          <input type="radio" name="quest1" id="answer" />
-          <p>bool</p>
-        </div>
-      </div>
-      <div class="question-answer">
-        <div class="question-wrapper">
-          <p>2. What is the type of the following expression?</p>
-          <strong>1 point</strong>
-        </div>
-        <div class="question">1 | 1 > 0 and 1 == 1</div>
-        <div>
-          <input type="radio" name="quest2" id="answer" />
-          <p>str</p>
-        </div>
-        <div>
-          <input type="radio" name="quest2" id="answer" />
-          <p>True</p>
-        </div>
-        <div>
-          <input type="radio" name="quest2" id="answer" />
-          <p>False</p>
-        </div>
-        <div>
-          <input type="radio" name="quest2" id="answer" />
-          <p>bool</p>
+        <div v-else>
+          <div class="answer">
+            <input type="number" placeholder="Answer..." />
+          </div>
         </div>
       </div>
-      <div class="question-answer">
-        <div class="question-wrapper">
-          <p>
-            3. How does the Python interpreter parenthesize the following
-            expression?
-          </p>
-          <strong>2 points</strong>
-        </div>
-        <div class="question">1 | 1 + 3 / 4 ** 2 * 0</div>
-        <div>
-          <input type="radio" name="quest3" id="answer" />
-          <p>1 + (((3 / 4) ** 2) * 0)</p>
-        </div>
-        <div>
-          <input type="radio" name="quest3" id="answer" />
-          <p>1 + ((3 / (4 ** 2)) * 0)</p>
-        </div>
-        <div>
-          <input type="radio" name="quest3" id="answer" />
-          <p>(1 + 3 / 4) ** (2 * 0)</p>
-        </div>
-        <div>
-          <input type="radio" name="quest3" id="answer" />
-          <p>All of the above</p>
-        </div>
-      </div>
+
       <button type="submit">Submit Answers</button>
     </div>
+  </div>
+  <div v-else>
+    <p>Loading...</p>
   </div>
 </template>
 
 <script>
+import { getAssignments } from '@/services/apiServices';
+
 export default {
   name: 'GradedAssign',
+
+  data() {
+    return {
+      assignments: [],
+    };
+  },
+  methods: {
+    fetchAssignments(week_number) {
+      getAssignments(week_number).then((response) => {
+        this.assignments = response.data;
+        console.log(this.assignments);
+      });
+    },
+  },
+
+  watch: {
+    '$route.params': {
+      immediate: true, // Trigger on component mount
+      handler(newParams) {
+        const week = parseInt(newParams.week);
+        if (!isNaN(week)) {
+          this.fetchAssignments(week);
+        } else {
+          console.error('Invalid route parameters');
+        }
+      },
+    },
+  },
 };
 </script>
 <style>
@@ -103,13 +99,17 @@ export default {
   margin-top: 20px;
 }
 
-.question-answer div {
-  display: flex;
-}
-
 .question-wrapper {
   display: flex;
   justify-content: space-between;
+}
+
+.question-answer label {
+  color: #212925;
+  font-size: 14px;
+  margin-left: 10px;
+  line-height: 2;
+  margin-top: 5px;
 }
 
 .question {
@@ -120,6 +120,14 @@ export default {
   font-size: 12px;
   border: 1px solid gray;
   border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.answer input {
+  width: 50px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid lightgray;
 }
 
 button {

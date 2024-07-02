@@ -1,11 +1,17 @@
 <template>
-  <NavBar heading="Dashboard" />
-  <div class="container">
-    <div class="course-wrapper">
-      <span>Python</span>
+  <NavBar />
+  <div class="dashboard">
+    <div class="menu">
+      <h4>MY DASHBOARD</h4>
+      <p>- My Courses</p>
     </div>
-    <div class="link-wrapper">
-      <router-link to="/course/about">Go to course ></router-link>
+    <div class="container">
+      <div class="course-wrapper">
+        <span>Python</span>
+      </div>
+      <div class="link-wrapper">
+        <router-link to="/course/about">Go to course ></router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -22,9 +28,35 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.dashboard {
+  display: flex;
+}
+
+.menu {
+  width: 250px;
+  background-color: #efefef;
+  box-shadow: 0px 0px 0px lightgray;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-right: solid 1px rgba(0, 0, 0, 0.12);
+  margin-right: 10px;
+  margin-top: 25px;
+  height: 880px;
+  padding-left: 20px;
+}
+
+.menu h4 {
+  padding: 10px;
+}
+
+.menu p {
+  color: #a0322c;
+}
+
 .container {
   width: 250px;
-  margin-top: 20px;
+  margin-top: 75px;
+  margin-left: 20px;
 }
 
 .course-wrapper {

@@ -28,5 +28,6 @@ export default {
 <style>
 .course-container {
   display: flex;
+  height: 910px;
 }
 </style>

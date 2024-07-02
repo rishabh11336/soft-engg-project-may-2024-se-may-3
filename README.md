@@ -18,9 +18,3 @@ The above examples are just to give you an idea about the features which are pos
 Creating the full-fledged clone of SEEK is not possible given the time we have. Hence, you can constrain the development by creating a clone of the GenAI enhanced portal with just one course. For that course, you can pre-populate it with learning material, assignments, quizzes etc.
 
 You are encouraged to use existing libraries, templates, APIs etc for various components in the system. For example, you can use [ACE](https://ace.c9.io/) as the code editor for your portal. You can use an online compiler API for compiling your code. You can use free and open source LLM model APIs such as Ollama to integrate GenAI capabilities into your system.
-
-
-# Steps for initial setup
-installation of vue-cli
-cmd - npm install -g @vue/cli
-project create - vue create project-name

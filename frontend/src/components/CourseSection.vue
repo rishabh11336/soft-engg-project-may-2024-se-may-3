@@ -2,7 +2,7 @@
   <div class="course-bar">
     <div class="wrapper" @click="toggleContent('introContent')">
       <div class="first">
-        <input type="radio" name="course" id="intro" />
+        <input type="radio" name="course" id="course-intro" />
         <p>Course Introduction</p>
       </div>
     </div>
@@ -11,83 +11,101 @@
 
     <div class="content-wrapper" v-if="introContent">
       <div class="first" @click="navigateTo('/course/about')">
-        <input type="radio" name="course-content" id="intro" />
-        <p>About the Course</p>
+        <input type="radio" name="course-content" id="about" />
+        <label for="about" class="intro-label">About the Course</label>
       </div>
       <div class="first" @click="navigateTo('/course/video')">
         <input type="radio" name="course-content" id="intro" />
-        <p>
+        <label for="intro" class="intro-label">
           How to submit a programming assignment
           <br />
           <span>Video</span>
-        </p>
+        </label>
       </div>
     </div>
-    <div class="wrapper" @click="toggleContent('week1Content')">
+
+    <div class="wrapper" @click="toggleContent('week1Content', 1)">
       <div class="first">
         <input type="radio" name="week1" id="intro" />
-        <p>Week1</p>
+        <p>Week 1</p>
       </div>
     </div>
+
     <div class="content-wrapper" v-if="week1Content">
-      <div class="first" @click="navigateTo('/course/intro')">
-        <input type="radio" name="week1-content" id="intro" />
-        <p>
-          L1.1: Indtroduction<br />
-          <span>Video</span>
-        </p>
+      <div
+        class="first"
+        v-for="item in weekContent"
+        :key="item.id"
+        @click="navigateTo(`/course/${item.week}/${item.id}`)"
+      >
+        <input type="radio" name="course-content" :id="`intro-${item.id}`" />
+        <label :for="`intro-${item.id}`"
+          ><p>
+            {{ item.title }}<br />
+            <span>{{ item.type }}</span>
+          </p></label
+        >
       </div>
-      <div class="first" @click="navigateTo('/course/intro-to-replit')">
-        <input type="radio" name="week1-content" id="intro" />
-        <p>
-          L1.2: Introduction to Replit<br />
-          <span>Video</span>
-        </p>
-      </div>
-      <div class="first" @click="navigateTo('/course/graded-assignment')">
-        <input type="radio" name="week1-content" id="intro" />
-        <p>
-          Graded Assignment 1<br />
-          <span>Assignment</span>
-        </p>
-      </div>
-      <div class="first" @click="navigateTo('/course/ppa1')">
-        <input type="radio" name="week1-content" id="intro" />
-        <p>
-          PPA 1 - Not Graded<br />
-          <span>Programming Assignment</span>
-        </p>
+      <div class="first" @click="navigateTo('/course/graded-assignment/1')">
+        <input type="radio" name="course-content" id="assignment" />
+        <label for="assignment">
+          <p>
+            Graded Assignment <br />
+            <span>Assignment</span>
+          </p>
+        </label>
       </div>
     </div>
   </div>
 </template>
+
 <script>
+import { getWeekContent } from '@/services/apiServices';
 export default {
   name: 'CourseComp',
   data() {
     return {
       introContent: true,
       week1Content: false,
+      week2Content: false,
+      weekContent: [],
     };
   },
   methods: {
     navigateTo(route) {
       this.$router.push(route);
     },
-    toggleContent(section) {
+    toggleContent(section, week_number) {
       this[section] = !this[section];
+      this.fetchWeekContent(week_number);
+    },
+    fetchWeekContent(week_number) {
+      getWeekContent(week_number)
+        .then((response) => {
+          this.weekContent = response.data;
+        })
+        .catch((error) => {
+          console.error('Error while fetching week content', error);
+        });
     },
   },
 };
 </script>
 
+<style scoped>
+/* Add your styles here */
+</style>
+
 <style>
 .course-bar {
-  min-width: 150px;
+  min-width: 250px !important;
   max-width: 300px;
   flex: 1 1 25%;
   border-right: 1px solid rgba(0, 0, 0, 0.12);
   transition: max-width 0.2s linear 0s;
+  overflow-y: scroll;
+  margin-left: 80px;
+  margin-top: 55px;
 }
 
 div {
@@ -129,12 +147,24 @@ hr {
   margin-left: -10px;
 }
 
+label p,
 p {
   margin-left: 10px;
+  font-size: 16px;
+  color: #49516c;
 }
 
+.intro-label {
+  padding: 10px 5px;
+  margin-left: 10px;
+  color: #49516c;
+}
 .content-wrapper span {
   color: rgb(173, 169, 169);
   font-size: 12px;
+}
+
+input[type='selected'] {
+  background-color: aquamarine;
 }
 </style>

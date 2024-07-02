@@ -3,7 +3,6 @@
     <button @click="handleWindow()" v-if="!isShow">Open Chat</button>
     <div class="chat-window-container" v-if="isShow">
       <div class="close-btn" @click="handleWindow()">X</div>
-
       <div class="chat-header">
         <p>Chat Window</p>
       </div>
@@ -65,7 +64,7 @@ export default {
   right: 0%;
   margin-right: -35px;
   z-index: 100;
-  top: 10%;
+  top: 0%;
 }
 
 .chat-window button {
@@ -75,12 +74,13 @@ export default {
   transform: rotate(270deg);
   color: black;
   cursor: pointer;
+  margin-top: 350px;
 }
 
 .chat-window .chat-window-container {
   background-color: white;
   width: 350px;
-  height: 500px;
+  height: 970px;
   box-shadow: 0px 10px 10px rgb(233, 233, 233);
 }
 
@@ -99,7 +99,7 @@ export default {
 }
 
 .chat-wrapper {
-  height: 79%;
+  height: 85%;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -140,8 +140,8 @@ input[type='text'] {
 
 .close-btn {
   position: fixed;
-  right: 0;
-  top: 12%;
+  right: 5px;
+  top: 1.5%;
   background-color: white;
   color: rgb(100, 94, 94);
   border-radius: 50%;

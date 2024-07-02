@@ -23,15 +23,17 @@ export default {
 .navbar {
   width: 100%;
   padding: 15px 16px 20px 20px;
-  background-color: #fff;
+  background-color: #efefef;
   font-size: 1.4rem;
   box-shadow: 0 3px 3px 1px #00000012;
   display: flex;
   align-items: center;
   top: 0;
-  position: sticky;
+  position: fixed;
   z-index: 1;
   height: 20px;
+  margin-left: -10px;
+  border-bottom: 2px solid rgb(210, 205, 205);
 }
 
 .navbar img {
@@ -41,8 +43,9 @@ export default {
 }
 
 .navbar h5 {
+  font-size: 16px;
   line-height: 24px;
-  color: #212225;
+  color: #49516c;
   font-weight: 500;
 }
 </style>
