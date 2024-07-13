@@ -6,6 +6,8 @@ import IntroVideo from '@/pages/IntroVideo.vue';
 import GradedAssign from '@/pages/GradedAssign.vue';
 import ProgAssign from '@/pages/ProgAssign.vue';
 import LectureVideo from '@/pages/LectureVideo.vue';
+import CodeEditor  from '@/components/CodeEditor.vue';
+import GradeDetails from '@/pages/GradeDetails.vue';
 
 const routes = [
   { path: '/', component: DashBoard },
@@ -17,8 +19,10 @@ const routes = [
       { path: 'video', component: IntroVideo },
       { path: ':week/:itemId', component: LectureVideo, props: true },
       { path: 'graded-assignment/:week', component: GradedAssign, props: true },
-      { path: 'ppa1', component: ProgAssign },
+      { path: 'ppa1/:week', component: ProgAssign, props: true },
       { path: '', redirect: 'about' },
+      {path: '/CodeEditor', component: CodeEditor},
+      {path: '/grade-details', name: "GradeDetails", component: GradeDetails}
     ],
   },
 ];

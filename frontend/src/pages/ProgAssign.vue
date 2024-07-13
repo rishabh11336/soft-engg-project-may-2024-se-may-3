@@ -1,14 +1,11 @@
 <template>
-  <div class="prog-assign-container">
+  <div class="prog-assign-container" v-if="assignment">
     <div class="prog-assign-header">
       <p>The due date for submitting this assignment has passed.</p>
       <p><strong>Due: </strong> 15 Sep 2021 23:59 IST</p>
     </div>
     <div class="question-note">
-      <p>
-        Print the first 5 positive integers in ascending order, one number on
-        each line.
-      </p>
+      <p>{{ assignment.question }}</p>
       <p>
         Note: Do not worry about the
         <strong style="color: red; font-weight: 200">\n </strong>that you
@@ -31,100 +28,241 @@
     </div>
 
     <div class="tabs">
-      <button
-        :class="{ active: activeTab === 'response' }"
-        @click="activeTab = 'response'"
-      >
+      <button :class="{ active: activeTab === 'response' }" @click="activeTab = 'response'">
         Your Response
       </button>
-      <button
-        :class="{ active: activeTab === 'solution' }"
-        @click="activeTab = 'solution'"
-      >
+      <button :class="{ active: activeTab === 'solution' }" @click="activeTab = 'solution'">
         Solution code
       </button>
     </div>
 
     <div v-if="activeTab === 'response'" class="editor-container">
-      <monaco-editor
-        v-model="userCode"
-        :language="selectedLanguage"
-        theme="vs"
-        @input="handleCodeChange"
-      ></monaco-editor>
+      <codemirror v-model="userCode" placeholder="Write your code here..." :style="{ height: '100%', width: '100%' }"
+        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
     </div>
     <div v-if="activeTab === 'solution'" class="editor-container">
-      <monaco-editor
-        v-model="solutionCode"
-        :language="selectedLanguage"
-        theme="vs"
-        @input="handleSolutionCodeChange"
-      ></monaco-editor>
+      <codemirror v-model="solutionCode" placeholder="Solution..." :style="{ height: '100%', width: '100%' }"
+        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
     </div>
-    <button @click="runCode">Run</button>
-    <div v-if="output" class="output">
-      <h3>Output:</h3>
-      <pre>{{ output }}</pre>
+
+    <div class="btn-container">
+      <button @click="runCode" class="run-btn">Run</button>
+      <button @click="submitAnswers">Submit</button>
     </div>
+
+    <div class="console">
+      <h2 class="console-header">Console</h2>
+      <hr>
+      <pre>>>> {{ output }}</pre>
+    </div>
+
+
+    <div class="test-cases">
+      <h3>Public Test Cases:</h3>
+      <div v-for="(testCase, index) in publicTestCases" :key="index" class="test-case">
+        <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
+        <div class="test-case-results">
+          <div>
+            <label>Expected Output:</label>
+            <pre>{{ testCase.expectedOutput }}</pre>
+          </div>
+          <div>
+            <label>Your Output:</label>
+            <pre>{{ testCase.userOutput }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    Loading assignment...
   </div>
 </template>
 
 <script>
-import MonacoEditor from './MonacoEditor.vue';
+import { defineComponent, ref, shallowRef } from 'vue';
+import { Codemirror } from 'vue-codemirror';
+import { python } from '@codemirror/lang-python';
+import { getProgrammingAssignments, submitAnswers as submitAssignment, runPythonCode } from '@/services/apiServices';
 
-export default {
+export default defineComponent({
   name: 'ProgAssign',
   components: {
-    MonacoEditor,
+    Codemirror,
   },
-  data() {
-    return {
-      selectedLanguage: 'python',
-      activeTab: 'response',
-      userCode: '',
-      solutionCode: '',
-      output: '',
-      pyodide: null,
+  setup() {
+    const selectedLanguage = ref('python');
+    const activeTab = ref('response');
+    const userCode = ref('');
+    const solutionCode = ref('');
+    const output = ref('');
+    const extensions = [python()];
+    const view = shallowRef(null);
+    const assignments = ref([]);
+    const publicTestCases = ref([]);
+    const privateTestCases = ref([]);
+    const assignment = ref(null);
+    const userOutputs = ref([]);
+
+    const handleReady = (payload) => {
+      view.value = payload.view;
     };
-  },
-  methods: {
-    changeLanguage() {
-      // This method can be used to perform any additional actions needed when the language changes
-    },
-    handleCodeChange(newCode) {
-      this.userCode = newCode;
-    },
-    handleSolutionCodeChange(newCode) {
-      this.solutionCode = newCode;
-    },
-    async runCode() {
-      if (this.selectedLanguage !== 'python') {
+
+    const runCode = async () => {
+      if (selectedLanguage.value !== 'python') {
         alert('Only Python is supported for now.');
         return;
       }
 
-      if (!window.pyodide) {
-        alert('Pyodide is not loaded yet. Please wait a moment.');
-        return;
-      }
-
       try {
-        await window.pyodide.loadPackage('micropip');
-        const output = await window.pyodide.runPythonAsync(this.userCode);
-        this.output = output;
+        console.log(`Running code: ${userCode.value}`);
+
+        const response = await runPythonCode(userCode.value);
+
+        console.log('Response from server:', response.data);
+        output.value = response.data.output.trim() || 'No output returned.';
+
       } catch (err) {
-        this.output = `Error: ${err.message}`;
+        console.error('Error running code:', err);
+        output.value = `Error: ${err.message}`;
       }
+    };
+
+
+    // const runCode = async () => {
+    //   if (selectedLanguage.value !== 'python') {
+    //     alert('Only Python is supported for now.');
+    //     return;
+    //   }
+
+    //   const results = [];
+    //   const allTestCases = [...publicTestCases.value, ...privateTestCases.value];
+
+    //   try {
+    //     for (let i = 0; i < allTestCases.length; i++) {
+    //       console.log(`Running test case ${i + 1} with code: ${userCode.value}`);
+    //       const response = await runPythonCode(userCode.value);
+    //       console.log('Response from server:', response.data);
+    //       results.push(response.data.output.trim());
+    //       console.log("Code Output : ", response.data.output)
+    //     }
+
+    //     userOutputs.value = results;
+    //     output.value = 'Code ran successfully. See the outputs below.';
+    //     // compareOutputs();
+    //   } catch (err) {
+    //     console.error('Error running code:', err);
+    //     output.value = `Error: ${err.message}`;
+    //   }
+    // };
+
+
+    // const compareOutputs = () => {
+    //   const allTestCases = [...publicTestCases.value, ...privateTestCases.value];
+    //   userOutputs.value.forEach((output, index) => {
+    //     allTestCases[index].userOutput = output;
+    //   });
+    // };
+
+    const fetchProgAssignments = (week_number) => {
+      getProgrammingAssignments(week_number).then((response) => {
+        assignments.value = response.data;
+        assignment.value = response.data[0]; // assuming one assignment for now
+        publicTestCases.value = [
+          {
+            input: assignment.value.public_test_case1,
+            expectedOutput: assignment.value.output_public_test_case1,
+            userOutput: '',
+          },
+          {
+            input: assignment.value.public_test_case2,
+            expectedOutput: assignment.value.output_public_test_case2,
+            userOutput: '',
+          },
+          {
+            input: assignment.value.public_test_case3,
+            expectedOutput: assignment.value.output_public_test_case3,
+            userOutput: '',
+          },
+        ];
+        privateTestCases.value = [
+          {
+            input: assignment.value.private_test_case1,
+            expectedOutput: assignment.value.output_private_test_case1,
+            userOutput: '',
+          },
+          {
+            input: assignment.value.private_test_case2,
+            expectedOutput: assignment.value.output_private_test_case2,
+            userOutput: '',
+          },
+          {
+            input: assignment.value.private_test_case3,
+            expectedOutput: assignment.value.output_private_test_case3,
+            userOutput: '',
+          },
+        ];
+      });
+    };
+
+    const submitAnswers = () => {
+      const submissionData = assignments.value.map((question) => ({
+        number: question.number,
+        weeknumber: question.weeknumber,
+        submitted_answers: [
+          userCode.value,
+        ],
+      }));
+
+      submissionData.forEach(submission => {
+        submitAssignment(submission)
+          .then(response => {
+            console.log("Submission successful:", response.data);
+          })
+          .catch(error => {
+            console.error("Error submitting answers:", error);
+          });
+      });
+    };
+
+    return {
+      selectedLanguage,
+      activeTab,
+      userCode,
+      solutionCode,
+      output,
+      extensions,
+      view,
+      assignments,
+      publicTestCases,
+      privateTestCases,
+      userOutputs,
+      assignment,
+      handleReady,
+      runCode,
+      fetchProgAssignments,
+      submitAnswers,
+    };
+  },
+
+  watch: {
+    '$route.params': {
+      immediate: true, // Trigger on component mount
+      handler(newParams) {
+        const week = parseInt(newParams.week);
+        if (!isNaN(week)) {
+          this.fetchProgAssignments(week);
+        } else {
+          console.error('Invalid route parameters');
+        }
+      },
     },
   },
-  // async mounted() {
-  //   // Load Pyodide
-  //   window.pyodide = await loadPyodide();
-  // },
-};
+});
 </script>
 
-<style>
+
+<style scoped>
 .prog-assign-header {
   background-color: brown;
   padding: 10px;
@@ -182,9 +320,60 @@ select {
 }
 
 .editor-container {
-  height: 500px; /* Adjust the height as needed */
+  height: 200px;
+  /* Adjust the height as needed */
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
+  cursor: text;
+}
+
+.run-button {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.output {
+  margin-top: 20px;
+}
+
+.test-cases, .console {
+  margin-top: 5px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.test-case {
+  margin-bottom: 10px;
+}
+
+.test-case-results {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.test-case-results>div {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.run-btn {
+  margin-right: 8px;
 }
 </style>

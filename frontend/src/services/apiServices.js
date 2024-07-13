@@ -13,3 +13,15 @@ export const getAssignments = (week_number) => {
 export function submitAnswers(submissionData) {
   return axios.post(`${API_BASE_URL}/gasubmit`, submissionData);
 }
+
+export const getProgrammingAssignments = (week_number) => {
+  return axios.get(`${API_BASE_URL}/programmingassignments/${week_number}`);
+};
+
+export function submitProgrammingAssignments(submissionData) {
+  return axios.post(`${API_BASE_URL}/pasubmit`, submissionData);
+}
+
+export const runPythonCode = (code) => {
+  return axios.post(`${API_BASE_URL}/run-python`, { code });
+};

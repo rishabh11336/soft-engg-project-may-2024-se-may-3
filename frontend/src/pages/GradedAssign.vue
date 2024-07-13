@@ -191,5 +191,6 @@ button {
   border-radius: 2px;
   margin-top: 20px;
   cursor: pointer;
+  margin-bottom: 30px;
 }
 </style>
