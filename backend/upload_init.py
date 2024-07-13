@@ -1,4 +1,4 @@
-from application.models import Questions,db,CourseContent
+from application.models.models import Questions,db,CourseContent
 from main import app
 import csv
 import pandas as pd
