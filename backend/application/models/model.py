@@ -5,7 +5,7 @@ db = SQLAlchemy()
 class Questions(db.Model):
     __tablename__ = 'questions'
     number = db.Column(db.Integer,autoincrement = True,primary_key = True)
-    weeknumber = db.Column(db.Integer,nullable = False)
+    weeknumber = db.Column(db.String(255),nullable = False)
     #! Need a column named week number so that we do not need to create new tables 
     type = db.Column(db.String(255),nullable = False)
     question = db.Column(db.String(255))
