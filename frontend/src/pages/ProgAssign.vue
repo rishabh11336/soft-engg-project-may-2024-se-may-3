@@ -61,7 +61,7 @@
         @input="handleSolutionCodeChange"
       ></monaco-editor>
     </div>
-    <button @click="runCode">Run</button>
+    <button class="run-btn" @click="runCode">Run</button>
     <div v-if="output" class="output">
       <h3>Output:</h3>
       <pre>{{ output }}</pre>
@@ -117,10 +117,6 @@ export default {
       }
     },
   },
-  // async mounted() {
-  //   // Load Pyodide
-  //   window.pyodide = await loadPyodide();
-  // },
 };
 </script>
 
@@ -186,5 +182,17 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
+}
+
+.run-btn {
+  padding: 10px;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 2px;
+  margin-top: 20px;
+  cursor: pointer;
 }
 </style>

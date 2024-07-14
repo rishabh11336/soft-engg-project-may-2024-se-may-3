@@ -36,21 +36,37 @@
         class="first"
         v-for="item in weekContent"
         :key="item.id"
-        @click="navigateTo(`/course/${item.week}/${item.id}`)"
+        @click="selectItem(item.id)"
+        :class="{ selected: selectedItem === item.id }"
       >
-        <input type="radio" name="course-content" :id="`intro-${item.id}`" />
-        <label :for="`intro-${item.id}`"
-          ><p>
+        <input
+          type="radio"
+          name="course-content"
+          :id="`intro-${item.id}`"
+          :value="item.id"
+          v-model="selectedItem"
+        />
+        <label :for="`intro-${item.id}`">
+          <p>
             {{ item.title }}<br />
             <span>{{ item.type }}</span>
-          </p></label
-        >
+          </p>
+        </label>
       </div>
       <div class="first" @click="navigateTo('/course/graded-assignment/1')">
         <input type="radio" name="course-content" id="assignment" />
         <label for="assignment">
           <p>
             Graded Assignment <br />
+            <span>Assignment</span>
+          </p>
+        </label>
+      </div>
+      <div class="first" @click="navigateTo('/course/ppa1')">
+        <input type="radio" name="course-content" id="prog-assignment" />
+        <label for="prog-assignment">
+          <p>
+            Programming Assignment <br />
             <span>Assignment</span>
           </p>
         </label>
@@ -69,6 +85,7 @@ export default {
       week1Content: false,
       week2Content: false,
       weekContent: [],
+      selectedItem: null,
     };
   },
   methods: {
@@ -88,14 +105,15 @@ export default {
           console.error('Error while fetching week content', error);
         });
     },
+    selectItem(id) {
+      this.selectedItem = id;
+      this.$router.push(
+        `/course/${this.weekContent.find((item) => item.id === id).week}/${id}`
+      );
+    },
   },
 };
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>
-
 <style>
 .course-bar {
   min-width: 250px !important;
@@ -134,7 +152,7 @@ div {
 
 .content-wrapper {
   display: block;
-  padding: 0px 10px 15px 15px;
+  padding: 0px 10px 15px 5px;
   color: #1c1c28;
 }
 
@@ -152,6 +170,7 @@ p {
   margin-left: 10px;
   font-size: 16px;
   color: #49516c;
+  padding-left: 10px;
 }
 
 .intro-label {
@@ -164,7 +183,8 @@ p {
   font-size: 12px;
 }
 
-input[type='selected'] {
-  background-color: aquamarine;
+.selected {
+  border-left: 4px solid #e2b562;
+  background-color: #f7f7fa;
 }
 </style>

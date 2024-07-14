@@ -124,13 +124,13 @@ export default {
 }
 
 .answer input {
-  width: 50px;
-  padding: 5px;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid lightgray;
+  margin-top: 5px;
 }
 
-button {
+.assignment-wrapper button {
   padding: 10px;
   background-color: black;
   color: white;
@@ -139,6 +139,7 @@ button {
   border: none;
   border-radius: 2px;
   margin-top: 20px;
+  margin-bottom: 40px;
   cursor: pointer;
 }
 </style>
