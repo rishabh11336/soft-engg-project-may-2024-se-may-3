@@ -50,12 +50,11 @@
       <button @click="submitAnswers">Submit</button>
     </div>
 
-    <div class="console">
+    <!-- <div class="console">
       <h2 class="console-header">Console</h2>
       <hr>
       <pre>>>> {{ output }}</pre>
-    </div>
-
+    </div> -->
 
     <div class="test-cases">
       <h3>Public Test Cases:</h3>
@@ -68,11 +67,30 @@
           </div>
           <div>
             <label>Your Output:</label>
-            <pre>{{ testCase.userOutput }}</pre>
+            <pre
+              :class="{ passed: testCase.userOutput === testCase.expectedOutput, failed: testCase.userOutput !== testCase.expectedOutput }">{{ testCase.userOutput }}</pre>
           </div>
         </div>
       </div>
     </div>
+    <div class="test-cases">
+      <h3>Private Test Cases:</h3>
+      <div v-for="(testCase, index) in privateTestCases" :key="index" class="test-case">
+        <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
+        <div class="test-case-results">
+          <div>
+            <label>Expected Output:</label>
+            <pre>{{ testCase.expectedOutput }}</pre>
+          </div>
+          <div>
+            <label>Your Output:</label>
+            <pre
+              :class="{ passed: testCase.userOutput === testCase.expectedOutput, failed: testCase.userOutput !== testCase.expectedOutput }">{{ testCase.userOutput }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div v-else>
     Loading assignment...
@@ -108,6 +126,7 @@ export default defineComponent({
       view.value = payload.view;
     };
 
+    // #3
     const runCode = async () => {
       if (selectedLanguage.value !== 'python') {
         alert('Only Python is supported for now.');
@@ -117,10 +136,43 @@ export default defineComponent({
       try {
         console.log(`Running code: ${userCode.value}`);
 
-        const response = await runPythonCode(userCode.value);
+        const results = {
+          public: [],
+          private: []
+        };
 
-        console.log('Response from server:', response.data);
-        output.value = response.data.output.trim() || 'No output returned.';
+        // public test cases
+        for (const testCase of publicTestCases.value) {
+          const response = await runPythonCode({
+            code: userCode.value,
+            input: testCase.input
+          });
+          const userOutput = response.data.output.trim();
+
+          testCase.userOutput = userOutput;
+          results.public.push({
+            ...testCase,
+            passed: userOutput === testCase.expectedOutput
+          });
+        }
+
+        // private test cases
+        for (const testCase of privateTestCases.value) {
+          const response = await runPythonCode({
+            code: userCode.value,
+            input: testCase.input
+          });
+          const userOutput = response.data.output.trim();
+
+          testCase.userOutput = userOutput;
+          results.private.push({
+            ...testCase,
+            passed: userOutput === testCase.expectedOutput
+          });
+        }
+
+        output.value = `Public Test Cases: ${results.public.filter(r => r.passed).length} passed, ${results.public.filter(r => !r.passed).length} failed\n`;
+        output.value += `Private Test Cases: ${results.private.filter(r => r.passed).length} passed, ${results.private.filter(r => !r.passed).length} failed\n`;
 
       } catch (err) {
         console.error('Error running code:', err);
@@ -129,40 +181,6 @@ export default defineComponent({
     };
 
 
-    // const runCode = async () => {
-    //   if (selectedLanguage.value !== 'python') {
-    //     alert('Only Python is supported for now.');
-    //     return;
-    //   }
-
-    //   const results = [];
-    //   const allTestCases = [...publicTestCases.value, ...privateTestCases.value];
-
-    //   try {
-    //     for (let i = 0; i < allTestCases.length; i++) {
-    //       console.log(`Running test case ${i + 1} with code: ${userCode.value}`);
-    //       const response = await runPythonCode(userCode.value);
-    //       console.log('Response from server:', response.data);
-    //       results.push(response.data.output.trim());
-    //       console.log("Code Output : ", response.data.output)
-    //     }
-
-    //     userOutputs.value = results;
-    //     output.value = 'Code ran successfully. See the outputs below.';
-    //     // compareOutputs();
-    //   } catch (err) {
-    //     console.error('Error running code:', err);
-    //     output.value = `Error: ${err.message}`;
-    //   }
-    // };
-
-
-    // const compareOutputs = () => {
-    //   const allTestCases = [...publicTestCases.value, ...privateTestCases.value];
-    //   userOutputs.value.forEach((output, index) => {
-    //     allTestCases[index].userOutput = output;
-    //   });
-    // };
 
     const fetchProgAssignments = (week_number) => {
       getProgrammingAssignments(week_number).then((response) => {
@@ -342,7 +360,8 @@ select {
   margin-top: 20px;
 }
 
-.test-cases, .console {
+.test-cases,
+.console {
   margin-top: 5px;
   max-height: 400px;
   overflow-y: auto;
