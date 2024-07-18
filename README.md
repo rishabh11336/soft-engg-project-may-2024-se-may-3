@@ -18,3 +18,19 @@ The above examples are just to give you an idea about the features which are pos
 Creating the full-fledged clone of SEEK is not possible given the time we have. Hence, you can constrain the development by creating a clone of the GenAI enhanced portal with just one course. For that course, you can pre-populate it with learning material, assignments, quizzes etc.
 
 You are encouraged to use existing libraries, templates, APIs etc for various components in the system. For example, you can use [ACE](https://ace.c9.io/) as the code editor for your portal. You can use an online compiler API for compiling your code. You can use free and open source LLM model APIs such as Ollama to integrate GenAI capabilities into your system.
+
+
+## To run Vue.js code locally, you need to set up your development environment. Here are the steps:
+
+## Prerequisites
+Node.js and npm: Vue.js requires Node.js and npm (Node Package Manager). Download and install them from Node.js official website(https://nodejs.org/).
+
+### Setting Up Vue.js
+Install Vue CLI: Vue CLI is a command-line interface tool for scaffolding Vue.js projects. Install it globally using npm:
+
+    npm install -g @vue/cli
+
+### Navigate to Your Project Directory:
+    cd frontend
+#### Start the Development Server:
+    npm run serve
