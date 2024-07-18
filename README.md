@@ -33,4 +33,6 @@ Install Vue CLI: Vue CLI is a command-line interface tool for scaffolding Vue.js
 ### Navigate to Your Project Directory:
     cd frontend
 #### Start the Development Server:
-    npm run serve
+       npm install 
+   
+       npm run serve
