@@ -13,7 +13,7 @@ The file contains 4 functionalities. Their purpose, inputs, outputs, and working
    
     -It takes an API token as input and initialized the client.
 
-3. generate_summary(video_id):
+2. generate_summary(video_id):
    
     -This function is used to generate summary for transcripts of videos.
    
@@ -23,29 +23,47 @@ The file contains 4 functionalities. Their purpose, inputs, outputs, and working
 
     -The function then processes the fetched transcript, initializes the GenAI client, and returns the summary as a string. 
 
-5. explain_theory_question(week_number, question_number):
-    -This function is used to generate a simplified explanation of Theory Graded Assignment questions, that helps the learner to understand and solve the questions in a step-wise approach. \n
+3. explain_theory_question(week_number, question_number):
+    -This function is used to generate a simplified explanation of Theory Graded Assignment questions, that helps the learner to understand and solve the questions in a step-wise approach.
+   
     -It fetches the data from the 'ta_complete.xlsx' file, which contains all questions of the course.
+   
     -It filters the question by week_number, and question_number. The combined pair of attributes (week_number, question_number) acts as the primary key in this case, as neither of them are individually unique.
+
     -The function fetches the base question, as well as the associated code snippet(if it is part of the question) from the identified row.
+
     -Then, the API client is initialized, and the explanation is generated.
+
     -The function returns the explanation as a string.
 
-6. explain_programming_assignment(week_number):
-    -This function is used to generate simplified explanation for the Programming Assignment questions. It provides suggestions on how the programmer can approach the problem at hand.
-    -It takes week_number as input, fetches corresponding question from the "Prog_assign.xlsx" file, which contains 1 programming assignment question from each week.
-    -It then connects to the API client, and generates explanation for the question.
-    -The function returns the generated explanation as a string
+4. explain_programming_assignment(week_number):
 
-7. doubtbot(video_id, question):
-    -This function is used to generate explanations for doubts of the user.
-    -It takes 2 parameters as input: the video_id, and the question asked by the user.
-    -The video id is used to fetch transcript of the video.
-    -The function also uses a global string variable, 'history', to store chat history. History is updated each time the user asks a question, and each time the system responds with an answer.
-    -The function returns the response to current question as output as a string.
+   -This function is used to generate simplified explanation for the Programming Assignment questions. It provides suggestions on how the programmer can approach the problem at hand.
 
-8. It is also important to note the refreshing of tokens.
+   -It takes week_number as input, fetches corresponding question from the "Prog_assign.xlsx" file, which contains 1 programming assignment question from each week.
+
+   -It then connects to the API client, and generates explanation for the question.
+
+   -The function returns the generated explanation as a string
+
+5. doubtbot(video_id, question):
+
+   -This function is used to generate explanations for doubts of the user.
+
+   -It takes 2 parameters as input: the video_id, and the question asked by the user.
+
+   -The video id is used to fetch transcript of the video.
+    
+   -The function also uses a global string variable, 'history', to store chat history. History is updated each time the user asks a question, and each time the system responds with an answer.
+
+   -The function returns the response to current question as output as a string.
+
+6. It is also important to note the refreshing of tokens.
+
     -The tokens are stored in a list.
+
     -Each time any function is run, it is executed through a try-catch-else block.
+
     -If the token has enough balance, there is no issue.
+
     -If the token has insufficient balance, the error is caught, and it is replaced with a fresh token.
