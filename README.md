@@ -24,7 +24,7 @@ The file contains 4 functionalities. Their purpose, inputs, outputs, and working
     -The function then processes the fetched transcript, initializes the GenAI client, and returns the summary as a string. 
 
 5. explain_theory_question(week_number, question_number):
-    -This function is used to generate a simplified explanation of Theory Graded Assignment questions, that helps the learner to understand and solve the questions in a step-wise approach.
+    -This function is used to generate a simplified explanation of Theory Graded Assignment questions, that helps the learner to understand and solve the questions in a step-wise approach. \n
     -It fetches the data from the 'ta_complete.xlsx' file, which contains all questions of the course.
     -It filters the question by week_number, and question_number. The combined pair of attributes (week_number, question_number) acts as the primary key in this case, as neither of them are individually unique.
     -The function fetches the base question, as well as the associated code snippet(if it is part of the question) from the identified row.
