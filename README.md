@@ -17,18 +17,19 @@ The file contains 4 functionalities. Their purpose, inputs, outputs, and working
    
     -This function is used to generate summary for transcripts of videos.
    
-    -It takes the video_id as input. It fetches the transcript of the corresponding video from the database 'dev.db', where the video is uniquely identified by the primary key 'id'.
+    -It takes the video_id as input. It fetches the transcript of the corresponding video from the database 'dev.db', where the video is uniquely identified by the primary key 'id' from the table 'coursecontent'.
 ![image](https://github.com/user-attachments/assets/4f5b5acc-991c-43de-a5c7-0eecf7439cab)
 
 
     -The function then processes the fetched transcript, initializes the GenAI client, and returns the summary as a string. 
 
-3. explain_theory_question(week_number, question_number):
+3. explain_theory_question(number):
+
     -This function is used to generate a simplified explanation of Theory Graded Assignment questions, that helps the learner to understand and solve the questions in a step-wise approach.
    
-    -It fetches the data from the 'ta_complete.xlsx' file, which contains all questions of the course.
+    -It fetches the data from the 'dev.db' file, from the 'questions' table which contains all questions of the course.
    
-    -It filters the question by week_number, and question_number. The combined pair of attributes (week_number, question_number) acts as the primary key in this case, as neither of them are individually unique.
+    -It filters the question number, which is primary key. 
 
     -The function fetches the base question, as well as the associated code snippet(if it is part of the question) from the identified row.
 
@@ -36,11 +37,11 @@ The file contains 4 functionalities. Their purpose, inputs, outputs, and working
 
     -The function returns the explanation as a string.
 
-4. explain_programming_assignment(week_number):
+4. explain_programming_assignment(number):
 
    -This function is used to generate simplified explanation for the Programming Assignment questions. It provides suggestions on how the programmer can approach the problem at hand.
 
-   -It takes week_number as input, fetches corresponding question from the "Prog_assign.xlsx" file, which contains 1 programming assignment question from each week.
+   -It takes number as input, fetches corresponding question from the "dev.db" file, which contains programming assignment questions.
 
    -It then connects to the API client, and generates explanation for the question.
 
