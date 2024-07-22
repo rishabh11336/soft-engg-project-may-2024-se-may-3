@@ -76,23 +76,34 @@ def generate_summary(video_id):
     raise ValueError("All tokens have been exhausted.")
 
 #Function to explain theory questions. Takes week and question number as input, returns explanation string as output
-def explain_theory_question(week_number, question_number):
+def explain_theory_question(number):
     # the codes below to fetch the data are written assuming that both this .py file
-    # and the database/xlsx files are in the same root directory. Kindly rewrite
+    # and the databases files are in the same root directory. Kindly rewrite
     # this section as required
 
     #fetching the questions
-    file_path = 'ta_complete.xlsx'
-    df = pd.read_excel(file_path)
-    filtered_df = df[(df['WeekNumber'] == week_number) & (df['QuestionNumber'] == question_number)]
+    db_path = 'dev.db'
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
 
-    #Filter required question and code snipped
-    if not filtered_df.empty:
-        question = filtered_df['Question'].values[0]
-        code_snippet = filtered_df['CodeSnippet'].values[0]
+    cursor.execute("SELECT question FROM questions WHERE number = ?", (number,))
+    row = cursor.fetchone()
+
+    
+    if row:
+        question = row[0]
     else:
         question = ""
-        code_snippet = " "
+
+    cursor.execute("SELECT code_snippet FROM questions WHERE number = ?", (number,))
+    row = cursor.fetchone()
+    if row:
+        code_snippet = row[0]
+    else:
+        code_snippet = ""
+    conn.close()
+    if code_snippet is None:
+        code_snippet=" "
     prompt = question + "\nCode Snippet:\n" + code_snippet
 
     
@@ -119,22 +130,25 @@ def explain_theory_question(week_number, question_number):
     raise ValueError("All tokens have been exhausted.")
 
 #function to explain programming questions. Takes week number as input and returns explanation as output
-def explain_programming_assignment(week_number):
+def explain_programming_assignment(number):
     # the codes below to fetch the data are written assuming that both this .py file
-    # and the database/xlsx files are in the same root directory. Kindly rewrite
+    # and the database files are in the same root directory. Kindly rewrite
     # this section as required
 
     #Fetch questions
-    file_path = 'Prog_assign.xlsx'
-    df = pd.read_excel(file_path)
-    #Filter required question
-    filtered_df = df[(df['WeekNumber'] == week_number)]
+   
+    db_path = 'dev.db'
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
 
-    if not filtered_df.empty:
-        question = filtered_df['Question'].values[0]
+    cursor.execute("SELECT question FROM programming_assignments WHERE id = ?", (number,))
+    row = cursor.fetchone()
+
+    
+    if row:
+        question = row[0]
     else:
-        question = "No question"
-
+        question = ""
     # everything above this should be rewritten as required
     #generate question explanation
     for token in tokens:
@@ -164,7 +178,7 @@ def doubtbot(video_id, question="How does list append works"):
     history += "User:" + question
 
     # the codes below to fetch the data are written assuming that both this .py file
-    # and the database/xlsx files are in the same root directory. Kindly rewrite
+    # and the database files are in the same root directory. Kindly rewrite
     # this section as required
 
     db_path = 'dev.db'
@@ -203,3 +217,4 @@ def doubtbot(video_id, question="How does list append works"):
             else:
                 raise e
     raise ValueError("All tokens have been exhausted.")
+
