@@ -9,9 +9,11 @@ from .resources.Coursecontent.coursecontentAPI import CourseContentAPI
 from .resources.GASubmission.submissionapi import SubmitAnswerAPI
 from .resources.Marks.marks import MarksAllWeeksAPI, MarksSpecificWeekAPI
 from .resources.PASubmission.submissionpa import SubmitProgrammingAssignmentAPI
-from .resources.ProgrammingAssignments.PAquestionsAPI import \
-    ProgrammingAssignmentAPI
+from .resources.ProgrammingAssignments.PAquestionsAPI import ProgrammingAssignmentAPI
 from .resources.Questions.questionAPI import QuestionAPI
+from .resources.GenaiAPI.lectureSummaryAPI import LectureSummaryAPI
+from .resources.GenaiAPI.explainTheoryQuestionAPI import ExplainTheoryQuestionAPI
+from .resources.GenaiAPI.explainProgrammingQuestionAPI import ExplainProgrammingQuestionAPI
 
 from .resources.Code.run_code import RunPython
 
@@ -57,6 +59,16 @@ app.add_url_rule("/api/pasubmit", view_func=SubmitProgrammingAssignmentAPI.as_vi
 
 app.add_url_rule("/api/run-python", view_func=RunPython.as_view("run_python"), methods=["POST"])
 
+
+# GenAI API
+# transcript summary
+app.add_url_rule("/api/genai/summary/<int:weeknumber>/<string:index>", view_func=LectureSummaryAPI.as_view("genai_summary"), methods=["GET"])
+
+# explain theory question
+app.add_url_rule("/api/genai/explaintheory/<int:number>", view_func=ExplainTheoryQuestionAPI.as_view("genai_explaintheory"), methods=["GET"])
+
+# explain programming question
+app.add_url_rule("/api/genai/explainprogramming/<int:id>", view_func=ExplainProgrammingQuestionAPI.as_view("genai_explainprogramming"), methods=["GET"])
 
 # check for database and create if not exists
 with app.app_context():
