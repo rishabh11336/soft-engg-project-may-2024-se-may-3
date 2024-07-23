@@ -173,8 +173,7 @@ def explain_programming_assignment(number):
 
 
 #Chatbot to solve doubts. Takes video id and question as inputs, returns answer as output
-def doubtbot(video_id, question="How does list append works"):
-    global history
+def doubtbot(video_id, question="How does list append works",history):
     history += "User:" + question
 
     # the codes below to fetch the data are written assuming that both this .py file
@@ -210,7 +209,7 @@ def doubtbot(video_id, question="How does list append works"):
                 max_tokens=2000
             )
             history += "System: " + response.choices[0].message.content
-            return response.choices[0].message.content
+            return response.choices[0].message.content, history
         except openai.AuthenticationError as e:
             if 'Insufficient balance' in str(e):
                 continue
