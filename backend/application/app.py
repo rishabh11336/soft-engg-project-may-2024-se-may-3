@@ -63,7 +63,7 @@ app.add_url_rule("/api/run-python", view_func=RunPython.as_view("run_python"), m
 
 # GenAI API
 # transcript summary
-app.add_url_rule("/api/genai/summary/<int:weeknumber>/<string:index>", view_func=LectureSummaryAPI.as_view("genai_summary"), methods=["GET"])
+app.add_url_rule("/api/genai/summary/<int:weeknumber>/<string:id>", view_func=LectureSummaryAPI.as_view("genai_summary"), methods=["GET"])
 
 # explain theory question
 app.add_url_rule("/api/genai/explaintheory/<int:number>", view_func=ExplainTheoryQuestionAPI.as_view("genai_explaintheory"), methods=["GET"])
