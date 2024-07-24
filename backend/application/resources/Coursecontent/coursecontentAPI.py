@@ -9,7 +9,7 @@ class CourseContentAPI(Resource):
         return jsonify([content.serialize() for content in coursecontent])
     
     def post(self):
-        pass
+        pass 
 
     def put(self):
         pass
