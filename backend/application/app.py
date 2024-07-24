@@ -14,6 +14,7 @@ from .resources.ProgrammingAssignments.PAquestionsAPI import \
 from .resources.Questions.questionAPI import QuestionAPI
 
 from .resources.Code.run_code import RunPython
+from .resources.Code.run_pa_code import RunProgAssign
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
@@ -56,6 +57,7 @@ app.add_url_rule("/api/programmingassignments/<int:week>", view_func=Programming
 app.add_url_rule("/api/pasubmit", view_func=SubmitProgrammingAssignmentAPI.as_view("submit_pa"), methods=["POST"])
 
 app.add_url_rule("/api/run-python", view_func=RunPython.as_view("run_python"), methods=["POST"])
+app.add_url_rule("/api/run-pa-code", view_func=RunProgAssign.as_view("run_pa_code"), methods=["POST"])
 
 
 # check for database and create if not exists

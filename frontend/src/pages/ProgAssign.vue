@@ -45,9 +45,10 @@
         :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
     </div>
 
+    <p class="msg">(Please run code before submitting)</p>
     <div class="btn-container">
       <button @click="runCode" class="run-btn">Run</button>
-      <button @click="submitAnswers">Submit</button>
+      <button @click="submitAnswers" :disabled="!isSubmitEnabled">Submit</button>
     </div>
 
     <!-- <div class="console">
@@ -101,7 +102,7 @@
 import { defineComponent, ref, shallowRef } from 'vue';
 import { Codemirror } from 'vue-codemirror';
 import { python } from '@codemirror/lang-python';
-import { getProgrammingAssignments, submitAnswers as submitAssignment, runPythonCode } from '@/services/apiServices';
+import { getProgrammingAssignments, submitProgrammingAssignments, runProgAssignCode } from '@/services/apiServices';
 
 export default defineComponent({
   name: 'ProgAssign',
@@ -121,10 +122,27 @@ export default defineComponent({
     const privateTestCases = ref([]);
     const assignment = ref(null);
     const userOutputs = ref([]);
+    const isSubmitEnabled = ref(false);
 
     const handleReady = (payload) => {
       view.value = payload.view;
     };
+
+    /*** const runCode = async () => {
+      if (selectedLanguage.value !== 'python') {
+        alert('Only Python is supported for now.');
+        return;
+      }
+      try {
+        console.log(`Running code: ${userCode.value}`);
+        const response = await runPythonCode(userCode.value);
+        console.log('Response from server:', response.data);
+        output.value = response.data.output.trim() || 'No output returned.';
+      } catch (err) {
+        console.error('Error running code:', err);
+        output.value = `Error: ${err.message}`;
+      }
+    }; ***/
 
     // #3
     const runCode = async () => {
@@ -141,11 +159,12 @@ export default defineComponent({
           private: []
         };
 
-        // public test cases
+        // Running public test cases
         for (const testCase of publicTestCases.value) {
-          const response = await runPythonCode({
+          console.log(`Running test case with input: ${testCase.input}`);
+          const response = await runProgAssignCode({
             code: userCode.value,
-            input: testCase.input
+            input: String(testCase.input)  // Passing input as string
           });
           const userOutput = response.data.output.trim();
 
@@ -156,11 +175,12 @@ export default defineComponent({
           });
         }
 
-        // private test cases
+        // Running private test cases
         for (const testCase of privateTestCases.value) {
-          const response = await runPythonCode({
+          console.log(`Running test case with input: ${testCase.input}`);
+          const response = await runProgAssignCode({
             code: userCode.value,
-            input: testCase.input
+            input: String(testCase.input)
           });
           const userOutput = response.data.output.trim();
 
@@ -174,11 +194,15 @@ export default defineComponent({
         output.value = `Public Test Cases: ${results.public.filter(r => r.passed).length} passed, ${results.public.filter(r => !r.passed).length} failed\n`;
         output.value += `Private Test Cases: ${results.private.filter(r => r.passed).length} passed, ${results.private.filter(r => !r.passed).length} failed\n`;
 
+        isSubmitEnabled.value = true;
+
       } catch (err) {
         console.error('Error running code:', err);
         output.value = `Error: ${err.message}`;
+        isSubmitEnabled.value = true;
       }
     };
+
 
 
 
@@ -224,25 +248,30 @@ export default defineComponent({
     };
 
     const submitAnswers = () => {
-      const submissionData = assignments.value.map((question) => ({
-        number: question.number,
-        weeknumber: question.weeknumber,
-        submitted_answers: [
-          userCode.value,
-        ],
-      }));
+      const submissionData = {
+        assignment_id: assignment.value.id,
+        weeknumber: assignment.value.weeknumber,
+        user_output_public_test_case1: publicTestCases.value[0].userOutput,
+        user_output_public_test_case2: publicTestCases.value[1].userOutput,
+        user_output_public_test_case3: publicTestCases.value[2].userOutput,
+        user_output_private_test_case1: privateTestCases.value[0].userOutput,
+        user_output_private_test_case2: privateTestCases.value[1].userOutput,
+        user_output_private_test_case3: privateTestCases.value[2].userOutput,
+        submitted_code: userCode.value,
+      };
 
-      submissionData.forEach(submission => {
-        submitAssignment(submission)
-          .then(response => {
-            console.log("Submission successful:", response.data);
-          })
-          .catch(error => {
-            console.error("Error submitting answers:", error);
-          });
-      });
+      submitProgrammingAssignments(submissionData)
+        .then(response => {
+          console.log("Submission successful:", response.data);
+
+          const marks = response.data.marks_awarded;
+
+          window.alert(`Submission Successful!\nMarks: ${marks}`);
+        })
+        .catch(error => {
+          console.error("Error submitting answers:", error);
+        });
     };
-
     return {
       selectedLanguage,
       activeTab,
@@ -260,6 +289,7 @@ export default defineComponent({
       runCode,
       fetchProgAssignments,
       submitAnswers,
+      isSubmitEnabled,
     };
   },
 
@@ -395,4 +425,20 @@ select {
 .run-btn {
   margin-right: 8px;
 }
+
+.msg {
+  font-size: small;
+  text-align: center;
+}
+
+.btn-container button:disabled {
+  background-color: #d3d3d3; /* Light gray background for disabled state */
+  cursor: not-allowed; /* Not-allowed cursor */
+  color: #a1a1a1; /* Light gray text for disabled state */
+}
+
+.btn-container button:disabled:hover {
+  cursor: not-allowed;
+}
+
 </style>

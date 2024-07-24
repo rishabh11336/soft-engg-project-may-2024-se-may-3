@@ -25,3 +25,8 @@ export function submitProgrammingAssignments(submissionData) {
 export const runPythonCode = (code) => {
   return axios.post(`${API_BASE_URL}/run-python`, { code });
 };
+
+export const runProgAssignCode = ({ code, input }) => {
+  return axios.post(`${API_BASE_URL}/run-pa-code`, { code, input });
+};
+
