@@ -61,35 +61,7 @@ export default {
       errorMessage: false,
       downloadIcon,
       closeIcon,
-      chatList: [
-        // {
-        //   id: 1,
-        //   sender:
-        //     'Hello here is my first query, explain it detail with example',
-        //   receiver: 'Okay, so here is detailed explaination of your query ...',
-        // },
-        // {
-        //   id: 2,
-        //   sender:
-        //     'Hello here aertg is my first query, explain it detail with example',
-        //   receiver:
-        //     'Okay, so here is sv detailed explaination of your query ...',
-        // },
-        // {
-        //   id: 3,
-        //   sender:
-        //     'Hello here is my first query, tu explain it detail with example',
-        //   receiver:
-        //     'Okay, so here is detailed 6nu explaination of your query ...',
-        // },
-        // {
-        //   id: 4,
-        //   sender:
-        //     'Hello here is my first query, explain it 6yn5u6  detail with example',
-        //   receiver:
-        //     'Okay, so here is detailed explaination 567br of your query ...',
-        // },
-      ],
+      chatList: [],
     };
   },
   mounted() {
@@ -103,6 +75,8 @@ export default {
       route === `/course/ppa1/${week_number}`
     ) {
       this.showSummary = false;
+    } else {
+      this.showSummary = true;
     }
   },
   unmounted() {
@@ -114,6 +88,7 @@ export default {
       this.isShow = !this.isShow;
     },
 
+    //Chat export function -- txt format
     handleExport() {
       // Prepare data for export (chat messages)
       const chatsText = this.chatList
@@ -142,11 +117,11 @@ export default {
       document.body.removeChild(link);
     },
 
+    // fetch lecture summary function
     fetchLectureSummary(week_number, lecture_id) {
       this.loading = true;
       getLectureSummary(week_number, lecture_id)
         .then((response) => {
-          console.log(response);
           this.chatList = [
             {
               id: 1,
@@ -156,11 +131,14 @@ export default {
         })
         .catch((error) => {
           console.error('Error while fetching week content', error);
-          this.loading = false;
           this.errorMessage = true;
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
 
+    // summary handler
     handleSummarise() {
       let route = this.$route.path;
       let week_number = parseInt(route.charAt(route.length - 3));
