@@ -25,3 +25,9 @@ export function submitProgrammingAssignments(submissionData) {
 export const runPythonCode = (code) => {
   return axios.post(`${API_BASE_URL}/run-python`, { code });
 };
+
+export const getLectureSummary = (week_number, lecture_id) => {
+  return axios.get(
+    `${API_BASE_URL}/genai/summary/${week_number}/${lecture_id}`
+  );
+};
