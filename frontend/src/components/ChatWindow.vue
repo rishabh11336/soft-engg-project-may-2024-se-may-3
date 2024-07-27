@@ -37,20 +37,25 @@
         </div>
         <div class="chat-input">
           <input
+            v-model="userQuery"
             type="text"
             name=""
             id=""
             placeholder="Type your query here ....."
+            @keyup.enter="handleDoubtBot()"
           />
+          <button @click="handleDoubtBot()">Ask</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import downloadIcon from '../assets/download.svg';
 import closeIcon from '../assets/close.svg';
-import { getLectureSummary } from '@/services/apiServices';
+import { getLectureSummary, getDoubtBotHelp } from '@/services/apiServices';
+
 export default {
   name: 'ChatWindow',
   data() {
@@ -62,10 +67,10 @@ export default {
       downloadIcon,
       closeIcon,
       chatList: [],
+      userQuery: '',
     };
   },
   mounted() {
-    // Attach click event listener to detect clicks outside chat window
     document.addEventListener('click', this.handleClickOutside);
 
     let route = this.$route.path;
@@ -80,44 +85,29 @@ export default {
     }
   },
   unmounted() {
-    // Clean up: remove click event listener when component is destroyed
     document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
     handleWindow() {
       this.isShow = !this.isShow;
     },
-
-    //Chat export function -- txt format
     handleExport() {
-      // Prepare data for export (chat messages)
       const chatsText = this.chatList
         .map((chat) => `You - ${chat.sender} AI - ${chat.receiver}`)
         .join('\n');
 
-      // Create a Blob containing the text
       const blob = new Blob([chatsText], { type: 'text/plain' });
-
-      // Create a temporary URL to the Blob
       const url = URL.createObjectURL(blob);
-
-      // Create a link element
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'chat-export.txt'; // Filename
+      link.download = 'chat-export.txt';
 
-      // Append the link to the body and click it to trigger download
       document.body.appendChild(link);
       link.click();
 
-      // Clean up: remove the temporary URL
       URL.revokeObjectURL(url);
-
-      // Remove the link from the DOM
       document.body.removeChild(link);
     },
-
-    // fetch lecture summary function
     fetchLectureSummary(week_number, lecture_id) {
       this.loading = true;
       getLectureSummary(week_number, lecture_id)
@@ -137,8 +127,6 @@ export default {
           this.loading = false;
         });
     },
-
-    // summary handler
     handleSummarise() {
       let route = this.$route.path;
       let week_number = parseInt(route.charAt(route.length - 3));
@@ -147,9 +135,7 @@ export default {
       this.fetchLectureSummary(week_number, lecture_id);
       this.isShow = true;
     },
-
     handleClickOutside(event) {
-      // Check if the clicked element is outside the chat window
       if (
         this.isShow &&
         !this.$refs.chatWindow.contains(event.target) &&
@@ -158,9 +144,33 @@ export default {
         this.isShow = false;
       }
     },
+    handleDoubtBot() {
+      if (!this.userQuery.trim()) return;
+      this.loading = true;
+      let route = this.$route.path;
+      let video_id = parseInt(route.charAt(route.length - 1));
+
+      getDoubtBotHelp(video_id, this.userQuery)
+        .then((response) => {
+          this.chatList.push({
+            id: this.chatList.length + 1,
+            sender: this.userQuery,
+            receiver: response.data.response,
+          });
+          this.userQuery = '';
+        })
+        .catch((error) => {
+          console.error('Error while fetching doubt bot response', error);
+          this.errorMessage = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
   },
 };
 </script>
+
 <style>
 ::-webkit-scrollbar {
   width: 5px;
@@ -211,7 +221,8 @@ export default {
 .chat-window .chat-window-container {
   background-color: white;
   width: 350px;
-  height: 970px;
+  /* height: 970px; */
+  height: 95vh;
   box-shadow: 0px 10px 10px rgb(233, 233, 233);
 }
 
@@ -248,7 +259,7 @@ export default {
 }
 
 .chat-wrapper {
-  height: 85%;
+  height: 83%;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -259,6 +270,7 @@ export default {
   width: 85%;
   border: none;
   background-color: rgba(167, 160, 153, 0.08);
+  display: flex;
 }
 
 .chat-input input::placeholder,

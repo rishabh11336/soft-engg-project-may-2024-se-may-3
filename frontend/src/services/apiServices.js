@@ -31,3 +31,15 @@ export const getLectureSummary = (week_number, lecture_id) => {
     `${API_BASE_URL}/genai/summary/${week_number}/${lecture_id}`
   );
 };
+
+export const getTheoryQuestionExplaination = (question_number) => {
+  return axios.get(`${API_BASE_URL}/genai/explaintheory/${question_number}`);
+};
+
+export const getProgrammingQuestionExplaination = (question_id) => {
+  return axios.get(`${API_BASE_URL}/genai/explainprogramming/${question_id}`);
+};
+
+export const getDoubtBotHelp = (video_id) => {
+  return axios.get(`${API_BASE_URL}/genai/doubtbot/${video_id}`);
+};
