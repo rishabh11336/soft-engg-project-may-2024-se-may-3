@@ -36,14 +36,9 @@
           <p>Loading Summary....</p>
         </div>
         <div class="chat-input">
-          <input
-            v-model="userQuery"
-            type="text"
-            name=""
-            id=""
-            placeholder="Type your query here ....."
-            @keyup.enter="handleDoubtBot()"
-          />
+          <input v-model="userQuery" type="text" placeholder="Type your query here ....."
+            @keyup.enter="handleDoubtBot()" />
+          <button @click="handleDoubtBot()" class="ask-btn">Ask</button>
         </div>
       </div>
     </div>
@@ -90,24 +85,29 @@ export default {
     handleWindow() {
       this.isShow = !this.isShow;
     },
+    //Chat export function -- txt format
     handleExport() {
+      // Prepare data for export (chat messages)
       const chatsText = this.chatList
         .map((chat) => `You - ${chat.sender} AI - ${chat.receiver}`)
         .join('\n');
-
+      // Create a Blob containing the text
       const blob = new Blob([chatsText], { type: 'text/plain' });
+      // Create a temporary URL to the Blob
       const url = URL.createObjectURL(blob);
+      // Create a link element
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'chat-export.txt';
-
+      link.download = 'chat-export.txt'; // Filename
+      // Append the link to the body and click it to trigger download
       document.body.appendChild(link);
       link.click();
-
+      // Clean up: remove the temporary URL
       URL.revokeObjectURL(url);
+      // Remove the link from the DOM
       document.body.removeChild(link);
     },
-
+    // fetch lecture summary function
     fetchLectureSummary(week_number, lecture_id) {
       this.loading = true;
       getLectureSummary(week_number, lecture_id)
@@ -122,27 +122,21 @@ export default {
         .catch((error) => {
           console.error('Error while fetching week content', error);
           this.errorMessage = true;
-          this.chatList = [
-            {
-              id: 3,
-              receiver: 'Sorry, someting went wrong, try again...',
-            },
-          ];
         })
         .finally(() => {
           this.loading = false;
         });
     },
+    // summary handler
     handleSummarise() {
       let route = this.$route.path;
       let week_number = parseInt(route.charAt(route.length - 3));
       let lecture_id = parseInt(route.charAt(route.length - 1));
-
       this.fetchLectureSummary(week_number, lecture_id);
       this.isShow = true;
     },
-
     handleClickOutside(event) {
+      // Check if the clicked element is outside the chat window
       if (
         this.isShow &&
         !this.$refs.chatWindow.contains(event.target) &&
@@ -151,6 +145,8 @@ export default {
         this.isShow = false;
       }
     },
+
+    // DOUBTBOT
     handleDoubtBot() {
       if (!this.userQuery.trim()) return;
       this.loading = true;
@@ -175,6 +171,7 @@ export default {
         });
     },
   },
+
 };
 </script>
 
@@ -189,13 +186,13 @@ export default {
   border-radius: 10px;
 }
 </style>
+
 <style scoped>
 .chat-window {
   position: fixed;
-  right: 0%;
-  margin-right: -35px;
+  right: 0;
+  top: 0;
   z-index: 100;
-  top: 0%;
 }
 
 .btn-chat,
@@ -256,7 +253,6 @@ export default {
   width: 20px;
   height: 20px;
   margin-left: 150px;
-  /* border: 2px solid rgb(77, 75, 75); */
   border-radius: 50%;
   padding: 3px;
   position: fixed;
@@ -270,19 +266,42 @@ export default {
   overflow-x: hidden;
 }
 
+.chat-input {
+  display: flex;
+  gap: 2px;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
 .chat-input input {
   padding: 10px;
-  height: 25px;
-  width: 85%;
+  height: 45px;
+  width: 100%;
   border: none;
   outline: none;
   background-color: rgba(167, 160, 153, 0.08);
-  display: flex;
+  flex-grow: 1;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
-.chat-input input::placeholder,
-input[type='text'] {
+.chat-input input::placeholder {
   font-size: 16px;
+}
+
+.chat-input .ask-btn {
+  padding: 10px;
+  background: rgb(243, 234, 234);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  height: 45px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sender {
@@ -308,7 +327,9 @@ input[type='text'] {
 
 .loading {
   height: 85%;
-  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .loading p {
@@ -321,7 +342,6 @@ input[type='text'] {
   cursor: pointer;
   width: 27px;
   height: 27px;
-  margin-left: 150px;
   position: fixed;
   right: 10px;
   top: 1.4%;
