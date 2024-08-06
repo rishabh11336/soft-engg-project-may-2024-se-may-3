@@ -6,6 +6,20 @@
     </div>
     <div class="question-note">
       <p>{{ assignment.question }}</p>
+      <button
+        class="help-btn"
+        @click="fetchProgrammingQuestionTheory(assignment.id)"
+      >
+        Get help
+      </button>
+      <div :key="assignment.id" v-if="showExplanation">
+        <div v-if="loading" class="loading">
+          <p>Loading explaination...</p>
+        </div>
+        <div v-else-if="explanation" class="explaination">
+          <div><strong>Explanation:</strong> {{ explanation }}</div>
+        </div>
+      </div>
       <p>
         Note: Do not worry about the
         <strong style="color: red; font-weight: 200">\n </strong>that you
@@ -28,21 +42,43 @@
     </div>
 
     <div class="tabs">
-      <button :class="{ active: activeTab === 'response' }" @click="activeTab = 'response'">
+      <button
+        :class="{ active: activeTab === 'response' }"
+        @click="activeTab = 'response'"
+      >
         Your Response
       </button>
-      <button :class="{ active: activeTab === 'solution' }" @click="activeTab = 'solution'">
+      <button
+        :class="{ active: activeTab === 'solution' }"
+        @click="activeTab = 'solution'"
+      >
         Solution code
       </button>
     </div>
 
     <div v-if="activeTab === 'response'" class="editor-container">
-      <codemirror v-model="userCode" placeholder="Write your code here..." :style="{ height: '100%', width: '100%' }"
-        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
+      <codemirror
+        v-model="userCode"
+        placeholder="Write your code here..."
+        :style="{ height: '100%', width: '100%' }"
+        :autofocus="true"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="extensions"
+        @ready="handleReady"
+      />
     </div>
     <div v-if="activeTab === 'solution'" class="editor-container">
-      <codemirror v-model="solutionCode" placeholder="Solution..." :style="{ height: '100%', width: '100%' }"
-        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
+      <codemirror
+        v-model="solutionCode"
+        placeholder="Solution..."
+        :style="{ height: '100%', width: '100%' }"
+        :autofocus="true"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="extensions"
+        @ready="handleReady"
+      />
     </div>
 
     <div class="btn-container">
@@ -58,8 +94,15 @@
 
     <div class="test-cases">
       <h3>Public Test Cases:</h3>
-      <div v-for="(testCase, index) in publicTestCases" :key="index" class="test-case">
-        <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
+      <div
+        v-for="(testCase, index) in publicTestCases"
+        :key="index"
+        class="test-case"
+      >
+        <p>
+          <strong>Test Case {{ index + 1 }}:</strong> Input:
+          {{ testCase.input }}
+        </p>
         <div class="test-case-results">
           <div>
             <label>Expected Output:</label>
@@ -68,15 +111,27 @@
           <div>
             <label>Your Output:</label>
             <pre
-              :class="{ passed: testCase.userOutput === testCase.expectedOutput, failed: testCase.userOutput !== testCase.expectedOutput }">{{ testCase.userOutput }}</pre>
+              :class="{
+                passed: testCase.userOutput === testCase.expectedOutput,
+                failed: testCase.userOutput !== testCase.expectedOutput,
+              }"
+              >{{ testCase.userOutput }}</pre
+            >
           </div>
         </div>
       </div>
     </div>
     <div class="test-cases">
       <h3>Private Test Cases:</h3>
-      <div v-for="(testCase, index) in privateTestCases" :key="index" class="test-case">
-        <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
+      <div
+        v-for="(testCase, index) in privateTestCases"
+        :key="index"
+        class="test-case"
+      >
+        <p>
+          <strong>Test Case {{ index + 1 }}:</strong> Input:
+          {{ testCase.input }}
+        </p>
         <div class="test-case-results">
           <div>
             <label>Expected Output:</label>
@@ -85,29 +140,37 @@
           <div>
             <label>Your Output:</label>
             <pre
-              :class="{ passed: testCase.userOutput === testCase.expectedOutput, failed: testCase.userOutput !== testCase.expectedOutput }">{{ testCase.userOutput }}</pre>
+              :class="{
+                passed: testCase.userOutput === testCase.expectedOutput,
+                failed: testCase.userOutput !== testCase.expectedOutput,
+              }"
+              >{{ testCase.userOutput }}</pre
+            >
           </div>
         </div>
       </div>
     </div>
-
   </div>
-  <div v-else>
-    Loading assignment...
-  </div>
+  <div v-else>Loading assignment...</div>
 </template>
 
 <script>
 import { defineComponent, ref, shallowRef } from 'vue';
 import { Codemirror } from 'vue-codemirror';
 import { python } from '@codemirror/lang-python';
-import { getProgrammingAssignments, submitAnswers as submitAssignment, runPythonCode } from '@/services/apiServices';
+import {
+  getProgrammingAssignments,
+  submitAnswers as submitAssignment,
+  runPythonCode,
+  getProgrammingQuestionExplaination,
+} from '@/services/apiServices';
 
 export default defineComponent({
   name: 'ProgAssign',
   components: {
     Codemirror,
   },
+
   setup() {
     const selectedLanguage = ref('python');
     const activeTab = ref('response');
@@ -121,6 +184,9 @@ export default defineComponent({
     const privateTestCases = ref([]);
     const assignment = ref(null);
     const userOutputs = ref([]);
+    const explanation = ref('');
+    const loading = ref(false);
+    const showExplanation = ref(false);
 
     const handleReady = (payload) => {
       view.value = payload.view;
@@ -138,21 +204,21 @@ export default defineComponent({
 
         const results = {
           public: [],
-          private: []
+          private: [],
         };
 
         // public test cases
         for (const testCase of publicTestCases.value) {
           const response = await runPythonCode({
             code: userCode.value,
-            input: testCase.input
+            input: testCase.input,
           });
           const userOutput = response.data.output.trim();
 
           testCase.userOutput = userOutput;
           results.public.push({
             ...testCase,
-            passed: userOutput === testCase.expectedOutput
+            passed: userOutput === testCase.expectedOutput,
           });
         }
 
@@ -160,28 +226,30 @@ export default defineComponent({
         for (const testCase of privateTestCases.value) {
           const response = await runPythonCode({
             code: userCode.value,
-            input: testCase.input
+            input: testCase.input,
           });
           const userOutput = response.data.output.trim();
 
           testCase.userOutput = userOutput;
           results.private.push({
             ...testCase,
-            passed: userOutput === testCase.expectedOutput
+            passed: userOutput === testCase.expectedOutput,
           });
         }
 
-        output.value = `Public Test Cases: ${results.public.filter(r => r.passed).length} passed, ${results.public.filter(r => !r.passed).length} failed\n`;
-        output.value += `Private Test Cases: ${results.private.filter(r => r.passed).length} passed, ${results.private.filter(r => !r.passed).length} failed\n`;
-
+        output.value = `Public Test Cases: ${
+          results.public.filter((r) => r.passed).length
+        } passed, ${results.public.filter((r) => !r.passed).length} failed\n`;
+        output.value += `Private Test Cases: ${
+          results.private.filter((r) => r.passed).length
+        } passed, ${results.private.filter((r) => !r.passed).length} failed\n`;
       } catch (err) {
         console.error('Error running code:', err);
         output.value = `Error: ${err.message}`;
       }
     };
 
-
-
+    // fetch Porgramming questions
     const fetchProgAssignments = (week_number) => {
       getProgrammingAssignments(week_number).then((response) => {
         assignments.value = response.data;
@@ -223,24 +291,39 @@ export default defineComponent({
       });
     };
 
+    // submit answer method
     const submitAnswers = () => {
       const submissionData = assignments.value.map((question) => ({
         number: question.number,
         weeknumber: question.weeknumber,
-        submitted_answers: [
-          userCode.value,
-        ],
+        submitted_answers: [userCode.value],
       }));
 
-      submissionData.forEach(submission => {
+      submissionData.forEach((submission) => {
         submitAssignment(submission)
-          .then(response => {
-            console.log("Submission successful:", response.data);
+          .then((response) => {
+            console.log('Submission successful:', response.data);
           })
-          .catch(error => {
-            console.error("Error submitting answers:", error);
+          .catch((error) => {
+            console.error('Error submitting answers:', error);
           });
       });
+    };
+
+    // fetch Programming question explanation
+    const fetchProgrammingQuestionTheory = (question_id) => {
+      showExplanation.value = !showExplanation.value;
+      loading.value = true;
+      getProgrammingQuestionExplaination(question_id)
+        .then((response) => {
+          explanation.value = response.data.explanation;
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          loading.value = false;
+        });
     };
 
     return {
@@ -260,6 +343,10 @@ export default defineComponent({
       runCode,
       fetchProgAssignments,
       submitAnswers,
+      showExplanation,
+      explanation,
+      loading,
+      fetchProgrammingQuestionTheory,
     };
   },
 
@@ -278,7 +365,6 @@ export default defineComponent({
   },
 });
 </script>
-
 
 <style scoped>
 .prog-assign-header {
@@ -346,12 +432,25 @@ select {
   cursor: text;
 }
 
+button {
+  padding: 10px;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 2px;
+  margin-top: 20px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
 .run-button {
   margin-top: 8px;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   cursor: pointer;
 }
@@ -381,7 +480,7 @@ select {
   margin-bottom: 20px;
 }
 
-.test-case-results>div {
+.test-case-results > div {
   flex: 1;
   margin-right: 10px;
 }
@@ -394,5 +493,20 @@ select {
 
 .run-btn {
   margin-right: 8px;
+}
+
+.explaination {
+  background-color: rgb(233, 228, 228);
+  padding: 5px 10px;
+  margin-top: 10px;
+}
+
+.help-btn {
+  margin: auto;
+}
+
+.loading p {
+  color: coral;
+  font-size: 18px;
 }
 </style>
