@@ -71,22 +71,24 @@ export default {
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
-
-    let route = this.$route.path;
-    let week_number = parseInt(route.charAt(route.length - 1));
-    if (
-      route === `/course/graded-assignment/${week_number}` ||
-      route === `/course/ppa1/${week_number}`
-    ) {
-      this.showSummary = false;
-    } else {
-      this.showSummary = true;
-    }
+    this.updateShowSummary(this.$route.path);
   },
   unmounted() {
     document.removeEventListener('click', this.handleClickOutside);
   },
+  watch: {
+    $route(to) {
+      this.updateShowSummary(to.path);
+    }
+  },
   methods: {
+    updateShowSummary(route) {
+      if (route.startsWith('/course/graded-assignment') || route.startsWith('/course/ppa1')) {
+        this.showSummary = false;
+      } else {
+        this.showSummary = true;
+      }
+    },
     handleWindow() {
       this.isShow = !this.isShow;
     },
