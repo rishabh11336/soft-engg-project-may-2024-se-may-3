@@ -44,7 +44,6 @@
             placeholder="Type your query here ....."
             @keyup.enter="handleDoubtBot()"
           />
-          <button @click="handleDoubtBot()">Ask</button>
         </div>
       </div>
     </div>
@@ -108,6 +107,7 @@ export default {
       URL.revokeObjectURL(url);
       document.body.removeChild(link);
     },
+
     fetchLectureSummary(week_number, lecture_id) {
       this.loading = true;
       getLectureSummary(week_number, lecture_id)
@@ -122,6 +122,12 @@ export default {
         .catch((error) => {
           console.error('Error while fetching week content', error);
           this.errorMessage = true;
+          this.chatList = [
+            {
+              id: 3,
+              receiver: 'Sorry, someting went wrong, try again...',
+            },
+          ];
         })
         .finally(() => {
           this.loading = false;
@@ -135,6 +141,7 @@ export default {
       this.fetchLectureSummary(week_number, lecture_id);
       this.isShow = true;
     },
+
     handleClickOutside(event) {
       if (
         this.isShow &&
@@ -221,7 +228,6 @@ export default {
 .chat-window .chat-window-container {
   background-color: white;
   width: 350px;
-  /* height: 970px; */
   height: 95vh;
   box-shadow: 0px 10px 10px rgb(233, 233, 233);
 }
@@ -259,7 +265,7 @@ export default {
 }
 
 .chat-wrapper {
-  height: 83%;
+  height: calc(91% - 25px);
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -269,6 +275,7 @@ export default {
   height: 25px;
   width: 85%;
   border: none;
+  outline: none;
   background-color: rgba(167, 160, 153, 0.08);
   display: flex;
 }
