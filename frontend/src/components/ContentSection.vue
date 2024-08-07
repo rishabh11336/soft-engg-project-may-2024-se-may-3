@@ -16,5 +16,6 @@ export default {
   height: 880px;
   margin-top: 55px;
   overflow: hidden;
+  width: calc(100vw - 850px);
 }
 </style>

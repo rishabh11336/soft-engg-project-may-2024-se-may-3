@@ -5,14 +5,16 @@
       <h4>MY DASHBOARD</h4>
       <p>- My Courses</p>
     </div>
-    <div class="container">
-      <div class="course-wrapper">
-        <span>Python</span>
-      </div>
-      <div class="link-wrapper">
-        <router-link to="/course/about">Go to course ></router-link>
-      </div>
-    </div>
+   <router-link to="/course/about"
+      ><div class="container">
+        <div class="course-wrapper">
+          <span>Python</span>
+        </div>
+        <div class="link-wrapper">
+          <router-link to="/course/about">Go to course ></router-link>
+        </div>
+      </div></router-link
+    >
   </div>
 </template>
 

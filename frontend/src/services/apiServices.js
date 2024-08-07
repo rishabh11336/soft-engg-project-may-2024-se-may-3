@@ -6,6 +6,10 @@ export const getWeekContent = (week_number) => {
   return axios.get(`${API_BASE_URL}/coursecontent/${week_number}`);
 };
 
+export const getLectureContent = (lecture_id) => {
+  return axios.get(`${API_BASE_URL}/videocontent/${lecture_id}`);
+};
+
 export const getAssignments = (week_number) => {
   return axios.get(`${API_BASE_URL}/questions/${week_number}`);
 };
@@ -41,7 +45,5 @@ export const getTheoryQuestionExplaination = (question_number) => {
 };
 
 export const getProgrammingQuestionExplaination = (question_id) => {
-  return axios.get(
-    `${API_BASE_URL}/genai/explainprogramming/${question_id}`
-  );
+  return axios.get(`${API_BASE_URL}/genai/explainprogramming/${question_id}`);
 };

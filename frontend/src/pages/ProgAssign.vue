@@ -14,7 +14,7 @@
       </button>
       <div :key="assignment.id" v-if="showExplanation">
         <div v-if="loading" class="loading">
-          <p>Loading explaination...</p>
+          <p>Loading explanation...</p>
         </div>
         <div v-else-if="explanation" class="explaination">
           <div><strong>Explanation:</strong> {{ explanation }}</div>
@@ -320,6 +320,7 @@ export default defineComponent({
         })
         .catch((error) => {
           console.error(error);
+          explanation.value = 'Sorry, something went wrong';
         })
         .finally(() => {
           loading.value = false;

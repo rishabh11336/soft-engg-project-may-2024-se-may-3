@@ -1,12 +1,11 @@
 <template>
-  <div class="lecture-container">
-    <div v-if="lecture" class="lecture-content">
-      <h2>{{ lecture.title }}</h2>
-      <p>★ ★ ★ ★ ★ -/ 5 (0 reviews) | Submit a review</p>
+  <div v-if="lecture && !loading" class="lecture-container">
+    <div class="lecture-content">
+      <h2>{{ lecture.index }} {{ lecture.title }}</h2>
       <iframe
         width="960"
         height="480"
-        :src= "lecture.link"
+        :src="`https://www.youtube.com/embed/${lecture.link}`"
         :title="lecture.title"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -14,43 +13,42 @@
         allowfullscreen
       ></iframe>
     </div>
-    <div v-else>
-      <p>Loading...</p>
-    </div>
-    <div v-if="lecture" class="transcript">
+    <div class="transcript">
       <div>{{ lecture.transcript }}</div>
     </div>
   </div>
+  <div v-else class="loading">Loading...</div>
 </template>
 
 <script>
 // Import necessary services or APIs for fetching data
-import { getWeekContent } from '@/services/apiServices';
+import { getLectureContent } from '@/services/apiServices';
 
 export default {
   name: 'LectureVideo',
   data() {
     return {
       lecture: null, // To store the fetched lecture content
+      loading: false,
     };
   },
   methods: {
-    fetchWeekContent(week_number, itemId) {
-      getWeekContent(week_number)
+    fetchWeekContent(itemId) {
+      this.loading = true;
+      getLectureContent(itemId)
         .then((response) => {
-          const filteredItem = response.data.find((item) => item.id === itemId);
+          const filteredItem = response.data;
           if (filteredItem) {
             this.lecture = filteredItem;
           } else {
-            console.error(
-              'Item not found for week and itemId:',
-              week_number,
-              itemId
-            );
+            console.error('Item not found for week and itemId:', itemId);
           }
         })
         .catch((error) => {
           console.error('Error while fetching week content', error);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
   },
@@ -61,10 +59,9 @@ export default {
     '$route.params': {
       immediate: true, // Trigger on component mount
       handler(newParams) {
-        const week = parseInt(newParams.week);
         const itemId = parseInt(newParams.itemId);
-        if (!isNaN(week) && !isNaN(itemId)) {
-          this.fetchWeekContent(week, itemId);
+        if (!isNaN(itemId)) {
+          this.fetchWeekContent(itemId);
         } else {
           console.error('Invalid route parameters');
         }
@@ -87,5 +84,15 @@ export default {
   overflow-y: scroll;
   font-size: 16px;
   line-height: 1.5;
+}
+
+.lecture-container {
+  max-width: 100%;
+}
+
+.loading {
+  text-align: center;
+  font-size: 30px;
+  margin-top: 150px;
 }
 </style>

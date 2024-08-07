@@ -80,7 +80,7 @@
         </button>
         <div :key="question.number" v-if="showExplanation[question.number]">
           <div v-if="loading[question.number]">
-            <p>Loading explaination...</p>
+            <p>Loading explanation...</p>
           </div>
           <div v-else-if="explanations[question.number]">
             <p>{{ explanations[question.number] }}</p>
@@ -152,6 +152,7 @@ export default {
           this.explanations[question_number] = response.data.explanation;
         })
         .catch((error) => {
+          this.explanations[question_number] = 'Sorry, something went wrong';
           console.error(error);
         })
         .finally(() => {
