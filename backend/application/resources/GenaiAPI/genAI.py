@@ -10,12 +10,7 @@ history = ''
 
 # this is a list that stores tokens
 tokens = [
-    'LL-7laZB8w678F4A0OgeCEIc7dKUMtIYPiPGysdgWaWsGjLo5eoA1SY0QTuzSkcdg6r',
-    'LL-esImLousIiNJvte7MOE1tonq4ZNHYSmcj5jBqRzc9aUkpMBk7AvSFORsKpZ2cxZ3',
-    'LL-O9tdUpjWi0Vbsa9gESembDfAAg3lV8yLMRsbro3WZojE9zEWJSbGHOCRNJguE1lF',
-    'LL-OjDJrgP1pldQBUd0n6ClilHK5xTfwRsXBN88fd1Bs0bhQIxJ2JjPma6cc0oIqwvO',
-    'LL-wvB7p79fDcSMj4w0v2j7wmEPEwlUrs7YKAK1UXBeaIrEh0NfPLe29ZkRNr4uOWB8',
-    'LL-daymeve1sjGZAfI0fv3g3QZ7bxhVeAUHVjDZ39hFodeeYD7UI6225tcdSJPK4JFV',
+    "LL-7u9HFmV7Zyu9sCyDE7NpY7hjFfHt6p7h6Po9pLAi9d4VgkjwTTL9bnN51cKsDwJ7"
     # Add more tokens if required
 ]
 
@@ -43,7 +38,7 @@ def generate_summary(transcript):
                      "content": "You are given a transcript of a programming lecture video. Give summary of the key concepts taught"},
                     {"role": "user", "content": transcript}
                 ],
-                max_tokens=10000
+                max_tokens=5000
             )
             return response.choices[0].message.content
         except openai.AuthenticationError as e:
@@ -97,7 +92,7 @@ def explain_theory_question(question, code_snippet):
                      "content": "You are given a programming question. Explain the question, and what concept it is based on, without making the answer too obvious"},
                     {"role": "user", "content": prompt}
                 ],
-                max_tokens=10000
+                max_tokens=7000
             )
             return response.choices[0].message.content
         except openai.AuthenticationError as e:
@@ -140,7 +135,7 @@ def explain_programming_assignment(question):
                      "content": "You are given a programming question, which requires the student to run a code. Explain how to approach the problem, what are the concepts, without giving away the answer."},
                     {"role": "user", "content": question}
                 ],
-                max_tokens=10000
+                max_tokens=7000
             )
             return response.choices[0].message.content
         except openai.AuthenticationError as e:
