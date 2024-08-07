@@ -25,3 +25,23 @@ export function submitProgrammingAssignments(submissionData) {
 export const runPythonCode = (code) => {
   return axios.post(`${API_BASE_URL}/run-python`, { code });
 };
+
+export const getLectureSummary = (week_number, lecture_id) => {
+  return axios.get(
+    `${API_BASE_URL}/genai/summary/${week_number}/${lecture_id}`
+  );
+};
+
+export const getDoubtBotHelp = (video_id) => {
+  return axios.get(`${API_BASE_URL}/genai/doubtbot/${video_id}`);
+};
+
+export const getTheoryQuestionExplaination = (question_number) => {
+  return axios.get(`${API_BASE_URL}/genai/explaintheory/${question_number}`);
+};
+
+export const getProgrammingQuestionExplaination = (question_id) => {
+  return axios.get(
+    `${API_BASE_URL}/genai/explainprogramming/${question_id}`
+  );
+};

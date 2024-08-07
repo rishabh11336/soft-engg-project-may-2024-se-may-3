@@ -15,7 +15,7 @@ class CourseContentAPI(Resource):
             "link": content.link } for content in coursecontent])
     
     def post(self):
-        pass
+        pass 
 
     def put(self):
         pass

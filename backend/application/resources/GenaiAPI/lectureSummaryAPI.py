@@ -5,8 +5,8 @@ from .genAI import generate_summary
 
 
 class LectureSummaryAPI(Resource):
-    def get(self, weeknumber, index):
-        content = CourseContent.query.filter_by(week=weeknumber, index=float(index)).first()
+    def get(self, weeknumber, id):
+        content = CourseContent.query.filter_by(week=weeknumber, id=id).first()
         if not content:
             return {"message": "No transcript found for this week"}, 404
         return {'summary' : generate_summary(content.transcript)}, 200
