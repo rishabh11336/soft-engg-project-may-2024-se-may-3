@@ -19,22 +19,26 @@ from .resources.GenaiAPI.doubtbot import doubtbotAPI
 from .resources.Code.run_code import RunPython
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
-app = Flask(__name__)
-app.config.from_object(Config)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
-db.init_app(app)
+    db.init_app(app)
 
-CORS(app)
-CORS(
-    app,
-    resources={
-        r"/*": {
-            "origins": "http://localhost:5173",
-            "supports_credentials": True,
-            "Access-Control-Allow-Credentials": True,
-        }
-    },
-)
+    CORS(app)
+    CORS(
+        app,
+        resources={
+            r"/*": {
+                "origins": "http://localhost:5173",
+                "supports_credentials": True,
+                "Access-Control-Allow-Credentials": True,
+            }
+        },
+    )
+    return app
+
+app = create_app()
     
 
 # API Endpoints

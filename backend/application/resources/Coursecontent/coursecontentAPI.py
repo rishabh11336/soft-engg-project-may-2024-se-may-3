@@ -7,7 +7,6 @@ class CourseContentAPI(Resource):
     def get(self, week=None):
         coursecontent = CourseContent.query.filter_by(week=week).all()
         return jsonify([content.serialize() for content in coursecontent])
-    
     def post(self):
         pass 
 
