@@ -33,7 +33,7 @@
           <p>Something went wrong</p>
         </div>
         <div v-else class="loading">
-          <p>Loading Summary....</p>
+          <p>Loading ....</p>
         </div>
         <div class="chat-input">
           <input
@@ -79,11 +79,15 @@ export default {
   watch: {
     $route(to) {
       this.updateShowSummary(to.path);
-    }
+    },
   },
   methods: {
     updateShowSummary(route) {
-      if (route.startsWith('/course/graded-assignment') || route.startsWith('/course/ppa1')) {
+      if (
+        route.startsWith('/course/graded-assignment') ||
+        route.startsWith('/course/ppa1') ||
+        route.startsWith('/course/about')
+      ) {
         this.showSummary = false;
       } else {
         this.showSummary = true;
@@ -114,12 +118,10 @@ export default {
       this.loading = true;
       getLectureSummary(week_number, lecture_id)
         .then((response) => {
-          this.chatList = [
-            {
-              id: 1,
-              receiver: response.data.summary,
-            },
-          ];
+          this.chatList.push({
+            id: this.chatList.length + 1,
+            receiver: response.data.summary,
+          });
         })
         .catch((error) => {
           console.error('Error while fetching week content', error);
