@@ -1,6 +1,19 @@
 from flask_sqlalchemy import SQLAlchemy
+from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api.formatters import TextFormatter
 
 db = SQLAlchemy()
+
+
+def YouTubeTranscript(video_id):
+    '''
+        Fetches the transcript of the video with the given video_id
+        "video_id is the video id of the youtube video example: 'dQw4w9WgXcQ' 
+        in a link like https://www.youtube.com/watch?v=dQw4w9WgXcQ
+    '''
+    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    formatter = TextFormatter()
+    return formatter.format_transcript(transcript)
 
 class Questions(db.Model):
     __tablename__ = 'questions'
@@ -45,7 +58,6 @@ class CourseContent(db.Model):
     type = db.Column(db.String(255),nullable = False)
     title = db.Column(db.String(255),nullable = False)
     link = db.Column(db.String(255),nullable = False)
-    transcript = db.Column(db.String,nullable = False)
 
     def serialize(self):
         return {
@@ -55,7 +67,7 @@ class CourseContent(db.Model):
             "type": self.type,
             "title": self.title,
             "link": self.link,
-            "transcript": self.transcript
+            "transcript": YouTubeTranscript(self.link)
         }
 
 class Submissions(db.Model):

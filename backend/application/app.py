@@ -14,6 +14,7 @@ from .resources.Questions.questionAPI import QuestionAPI
 from .resources.GenaiAPI.lectureSummaryAPI import LectureSummaryAPI
 from .resources.GenaiAPI.explainTheoryQuestionAPI import ExplainTheoryQuestionAPI
 from .resources.GenaiAPI.explainProgrammingQuestionAPI import ExplainProgrammingQuestionAPI
+from .resources.Coursecontent.videocontentAPI import VideoContentAPI
 
 from .resources.Code.run_code import RunPython
 
@@ -40,6 +41,9 @@ CORS(
 
 # Course Content
 app.add_url_rule("/api/coursecontent/<int:week>", view_func=CourseContentAPI.as_view("coursecontent"), methods=["GET"])
+
+# Video & Transcript Content
+app.add_url_rule("/api/videocontent/<int:id>", view_func=VideoContentAPI.as_view("videocontent"), methods=["GET"])
 
 # Questions
 app.add_url_rule("/api/questions/<int:week>", view_func=QuestionAPI.as_view("questions"), methods=["GET"])
