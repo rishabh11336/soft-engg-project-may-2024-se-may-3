@@ -6,10 +6,7 @@
     </div>
     <div class="question-note">
       <p>{{ assignment.question }}</p>
-      <button
-        class="help-btn"
-        @click="fetchProgrammingQuestionTheory(assignment.id)"
-      >
+      <button class="help-btn" @click="fetchProgrammingQuestionTheory(assignment.id)">
         Get help
       </button>
       <div :key="assignment.id" v-if="showExplanation">
@@ -42,48 +39,28 @@
     </div>
 
     <div class="tabs">
-      <button
-        :class="{ active: activeTab === 'response' }"
-        @click="activeTab = 'response'"
-      >
+      <button :class="{ active: activeTab === 'response' }" @click="activeTab = 'response'">
         Your Response
       </button>
-      <button
-        :class="{ active: activeTab === 'solution' }"
-        @click="activeTab = 'solution'"
-      >
+      <button :class="{ active: activeTab === 'solution' }" @click="activeTab = 'solution'">
         Solution code
       </button>
     </div>
 
     <div v-if="activeTab === 'response'" class="editor-container">
-      <codemirror
-        v-model="userCode"
-        placeholder="Write your code here..."
-        :style="{ height: '100%', width: '100%' }"
-        :autofocus="true"
-        :indent-with-tab="true"
-        :tab-size="2"
-        :extensions="extensions"
-        @ready="handleReady"
-      />
+      <codemirror v-model="userCode" placeholder="Write your code here..." :style="{ height: '100%', width: '100%' }"
+        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
     </div>
     <div v-if="activeTab === 'solution'" class="editor-container">
-      <codemirror
-        v-model="solutionCode"
-        placeholder="Solution..."
-        :style="{ height: '100%', width: '100%' }"
-        :autofocus="true"
-        :indent-with-tab="true"
-        :tab-size="2"
-        :extensions="extensions"
-        @ready="handleReady"
-      />
+      <codemirror v-model="solutionCode" placeholder="Solution..." :style="{ height: '100%', width: '100%' }"
+        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
     </div>
 
+
+    <p class="msg">(Please run code before submitting)</p>
     <div class="btn-container">
       <button @click="runCode" class="run-btn">Run</button>
-      <button @click="submitAnswers">Submit</button>
+      <button @click="submitAnswers" :disabled="!isSubmitEnabled">Submit</button>
     </div>
 
     <!-- <div class="console">
@@ -91,18 +68,10 @@
       <hr>
       <pre>>>> {{ output }}</pre>
     </div> -->
-
     <div class="test-cases">
       <h3>Public Test Cases:</h3>
-      <div
-        v-for="(testCase, index) in publicTestCases"
-        :key="index"
-        class="test-case"
-      >
-        <p>
-          <strong>Test Case {{ index + 1 }}:</strong> Input:
-          {{ testCase.input }}
-        </p>
+      <div v-for="(testCase, index) in publicTestCases" :key="index" class="test-case">
+        <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
         <div class="test-case-results">
           <div>
             <label>Expected Output:</label>
@@ -111,27 +80,15 @@
           <div>
             <label>Your Output:</label>
             <pre
-              :class="{
-                passed: testCase.userOutput === testCase.expectedOutput,
-                failed: testCase.userOutput !== testCase.expectedOutput,
-              }"
-              >{{ testCase.userOutput }}</pre
-            >
+              :class="{ passed: testCase.userOutput === testCase.expectedOutput, failed: testCase.userOutput !== testCase.expectedOutput }">{{ testCase.userOutput }}</pre>
           </div>
         </div>
       </div>
     </div>
     <div class="test-cases">
       <h3>Private Test Cases:</h3>
-      <div
-        v-for="(testCase, index) in privateTestCases"
-        :key="index"
-        class="test-case"
-      >
-        <p>
-          <strong>Test Case {{ index + 1 }}:</strong> Input:
-          {{ testCase.input }}
-        </p>
+      <div v-for="(testCase, index) in privateTestCases" :key="index" class="test-case">
+        <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
         <div class="test-case-results">
           <div>
             <label>Expected Output:</label>
@@ -140,18 +97,16 @@
           <div>
             <label>Your Output:</label>
             <pre
-              :class="{
-                passed: testCase.userOutput === testCase.expectedOutput,
-                failed: testCase.userOutput !== testCase.expectedOutput,
-              }"
-              >{{ testCase.userOutput }}</pre
-            >
+              :class="{ passed: testCase.userOutput === testCase.expectedOutput, failed: testCase.userOutput !== testCase.expectedOutput }">{{ testCase.userOutput }}</pre>
           </div>
         </div>
       </div>
     </div>
+
   </div>
-  <div v-else>Loading assignment...</div>
+  <div v-else>
+    Loading assignment...
+  </div>
 </template>
 
 <script>
@@ -160,9 +115,9 @@ import { Codemirror } from 'vue-codemirror';
 import { python } from '@codemirror/lang-python';
 import {
   getProgrammingAssignments,
-  submitAnswers as submitAssignment,
-  runPythonCode,
+  submitProgrammingAssignments,
   getProgrammingQuestionExplaination,
+  runProgAssignCode,
 } from '@/services/apiServices';
 
 export default defineComponent({
@@ -187,6 +142,7 @@ export default defineComponent({
     const explanation = ref('');
     const loading = ref(false);
     const showExplanation = ref(false);
+    const isSubmitEnabled = ref(false);
 
     const handleReady = (payload) => {
       view.value = payload.view;
@@ -204,50 +160,53 @@ export default defineComponent({
 
         const results = {
           public: [],
-          private: [],
+          private: []
         };
 
-        // public test cases
+        // Running public test cases
         for (const testCase of publicTestCases.value) {
-          const response = await runPythonCode({
+          console.log(`Running test case with input: ${testCase.input}`);
+          const response = await runProgAssignCode({
             code: userCode.value,
-            input: testCase.input,
+            input: String(testCase.input)  // Passing input as string
           });
           const userOutput = response.data.output.trim();
 
           testCase.userOutput = userOutput;
           results.public.push({
             ...testCase,
-            passed: userOutput === testCase.expectedOutput,
+            passed: userOutput === testCase.expectedOutput
           });
         }
 
-        // private test cases
+        // Running private test cases
         for (const testCase of privateTestCases.value) {
-          const response = await runPythonCode({
+          console.log(`Running test case with input: ${testCase.input}`);
+          const response = await runProgAssignCode({
             code: userCode.value,
-            input: testCase.input,
+            input: String(testCase.input)
           });
           const userOutput = response.data.output.trim();
 
           testCase.userOutput = userOutput;
           results.private.push({
             ...testCase,
-            passed: userOutput === testCase.expectedOutput,
+            passed: userOutput === testCase.expectedOutput
           });
         }
 
-        output.value = `Public Test Cases: ${
-          results.public.filter((r) => r.passed).length
-        } passed, ${results.public.filter((r) => !r.passed).length} failed\n`;
-        output.value += `Private Test Cases: ${
-          results.private.filter((r) => r.passed).length
-        } passed, ${results.private.filter((r) => !r.passed).length} failed\n`;
+        output.value = `Public Test Cases: ${results.public.filter(r => r.passed).length} passed, ${results.public.filter(r => !r.passed).length} failed\n`;
+        output.value += `Private Test Cases: ${results.private.filter(r => r.passed).length} passed, ${results.private.filter(r => !r.passed).length} failed\n`;
+
+        isSubmitEnabled.value = true;
+
       } catch (err) {
         console.error('Error running code:', err);
         output.value = `Error: ${err.message}`;
+        isSubmitEnabled.value = true;
       }
     };
+
 
     // fetch Porgramming questions
     const fetchProgAssignments = (week_number) => {
@@ -293,21 +252,29 @@ export default defineComponent({
 
     // submit answer method
     const submitAnswers = () => {
-      const submissionData = assignments.value.map((question) => ({
-        number: question.number,
-        weeknumber: question.weeknumber,
-        submitted_answers: [userCode.value],
-      }));
+      const submissionData = {
+        assignment_id: assignment.value.id,
+        weeknumber: assignment.value.weeknumber,
+        user_output_public_test_case1: publicTestCases.value[0].userOutput,
+        user_output_public_test_case2: publicTestCases.value[1].userOutput,
+        user_output_public_test_case3: publicTestCases.value[2].userOutput,
+        user_output_private_test_case1: privateTestCases.value[0].userOutput,
+        user_output_private_test_case2: privateTestCases.value[1].userOutput,
+        user_output_private_test_case3: privateTestCases.value[2].userOutput,
+        submitted_code: userCode.value,
+      };
 
-      submissionData.forEach((submission) => {
-        submitAssignment(submission)
-          .then((response) => {
-            console.log('Submission successful:', response.data);
-          })
-          .catch((error) => {
-            console.error('Error submitting answers:', error);
-          });
-      });
+      submitProgrammingAssignments(submissionData)
+        .then(response => {
+          console.log("Submission successful:", response.data);
+
+          const marks = response.data.marks_awarded;
+
+          window.alert(`Submission Successful!\nMarks: ${marks}`);
+        })
+        .catch(error => {
+          console.error("Error submitting answers:", error);
+        });
     };
 
     // fetch Programming question explanation
@@ -348,6 +315,7 @@ export default defineComponent({
       explanation,
       loading,
       fetchProgrammingQuestionTheory,
+      isSubmitEnabled,
     };
   },
 
@@ -481,7 +449,7 @@ button {
   margin-bottom: 20px;
 }
 
-.test-case-results > div {
+.test-case-results>div {
   flex: 1;
   margin-right: 10px;
 }
@@ -509,5 +477,23 @@ button {
 .loading p {
   color: coral;
   font-size: 18px;
+}
+
+.msg {
+  font-size: small;
+  text-align: center;
+}
+
+.btn-container button:disabled {
+  background-color: #d3d3d3;
+  /* Light gray background for disabled state */
+  cursor: not-allowed;
+  /* Not-allowed cursor */
+  color: #a1a1a1;
+  /* Light gray text for disabled state */
+}
+
+.btn-container button:disabled:hover {
+  cursor: not-allowed;
 }
 </style>

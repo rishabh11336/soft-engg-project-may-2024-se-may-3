@@ -12,6 +12,8 @@
         </div>
         <div class="link-wrapper">
           <router-link to="/course/about">Go to course ></router-link>
+          <p v-if="marks !== null">Assignment Week {{ weekNumber }} Marks: {{ marks?.toFixed(2) }}</p>
+          <p v-if="programmingAssignmentMarks !== null">Programming Assignment week  {{ weekNumber }} Marks: {{ programmingAssignmentMarks?.toFixed(2) }}</p>
         </div>
       </div></router-link
     >
@@ -20,10 +22,41 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue';
+import { getMarksForWeek, getProgrammingAssignmentMarks  } from '@/services/apiServices';
 export default {
   name: 'DashBoard',
   components: {
     NavBar,
+  },
+  data() {
+    return {
+      marks: null,
+      programmingAssignmentMarks: null,
+      weekNumber: 1,
+      assignmentId: 1,
+    };
+  },
+  mounted() {
+    this.fetchMarks();
+    this.fetchProgrammingAssignmentMarks();
+  },
+  methods: {
+    async fetchMarks() {
+      try {
+        const response = await getMarksForWeek(this.weekNumber);
+        this.marks = response.data.marks;
+      } catch (error) {
+        console.error('Error fetching marks:', error);
+      }
+    },
+    async fetchProgrammingAssignmentMarks() {
+      try {
+        const response = await getProgrammingAssignmentMarks(this.weekNumber, this.assignmentId);
+        this.programmingAssignmentMarks = response.data.marks_awarded;
+      } catch (error) {
+        console.error('Error fetching programming assignment marks:', error);
+      }
+    },
   },
 };
 </script>

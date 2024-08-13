@@ -3,6 +3,9 @@ import os
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 
+from application.resources.Code.run_pa_code import RunProgAssign
+from application.resources.Marks.programming_marks import GetProgrammingAssignmentMarksAPI
+
 from .Config.config import Config
 from .models.model import CourseContent, Questions, Submissions, db
 from .resources.Coursecontent.coursecontentAPI import CourseContentAPI
@@ -63,6 +66,13 @@ app.add_url_rule("/api/programmingassignments/<int:week>", view_func=Programming
 app.add_url_rule("/api/pasubmit", view_func=SubmitProgrammingAssignmentAPI.as_view("submit_pa"), methods=["POST"])
 
 app.add_url_rule("/api/run-python", view_func=RunPython.as_view("run_python"), methods=["POST"])
+app.add_url_rule("/api/run-pa-code", view_func=RunProgAssign.as_view("run_pa_code"), methods=["POST"])
+
+# Programming marks
+app.add_url_rule("/api/programmingassignments/<int:weeknumber>/marks/<int:assignment_id>",
+                 view_func=GetProgrammingAssignmentMarksAPI.as_view("get_programming_assignment_marks"),
+                 methods=["GET"])
+
 
 
 # GenAI API
