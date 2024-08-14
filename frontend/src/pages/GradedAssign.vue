@@ -181,7 +181,6 @@ export default {
   background-color: rgb(247, 246, 246);
   padding: 15px;
   height: 800px;
-  overflow-y: auto;
 }
 
 .question-answer {

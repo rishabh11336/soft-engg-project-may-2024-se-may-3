@@ -85,7 +85,7 @@
         </div>
       </div>
     </div>
-    <div class="test-cases">
+    <!-- <div class="test-cases">
       <h3>Private Test Cases:</h3>
       <div v-for="(testCase, index) in privateTestCases" :key="index" class="test-case">
         <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
@@ -101,7 +101,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
   <div v-else>
