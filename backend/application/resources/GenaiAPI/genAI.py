@@ -10,7 +10,8 @@ history = ''
 
 # this is a list that stores tokens
 tokens = [
-    "LL-7u9HFmV7Zyu9sCyDE7NpY7hjFfHt6p7h6Po9pLAi9d4VgkjwTTL9bnN51cKsDwJ7"
+    "LL-7u9HFmV7Zyu9sCyDE7NpY7hjFfHt6p7h6Po9pLAi9d4VgkjwTTL9bnN51cKsDwJ7",
+    "LL-Qm2wzWhTyYYAJV2kWgGhcbCLIVZBCOzSDuib1smXSsouoANM1YtgSfp3v9IlyQPW",
     # Add more tokens if required
 ]
 
