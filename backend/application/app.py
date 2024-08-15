@@ -86,7 +86,7 @@ app.add_url_rule("/api/genai/explaintheory/<int:number>", view_func=ExplainTheor
 app.add_url_rule("/api/genai/explainprogramming/<int:id>", view_func=ExplainProgrammingQuestionAPI.as_view("genai_explainprogramming"), methods=["GET"])
 
 # doubtbot api
-app.add_url_rule('/api/genai/doubtbot/<int:video_id>',view_func=doubtbotAPI.as_view('genai_doubtbot'), methods = ['GET'])
+app.add_url_rule('/api/genai/doubtbot/<int:video_id>/<string:user_query>',view_func=doubtbotAPI.as_view('genai_doubtbot'), methods = ['GET'])
 
 # check for database and create if not exists
 with app.app_context():
