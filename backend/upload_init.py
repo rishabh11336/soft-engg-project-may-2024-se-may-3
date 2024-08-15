@@ -8,7 +8,7 @@ def updateCourseContent():
     print('INFO: Writing data for course content')
 
     for idx in range(dfCourseContent.shape[0]):
-        coursecontent = CourseContent(week = int(dfCourseContent['Week'][idx]),index = dfCourseContent['Index'][idx],type=dfCourseContent['Type'][idx],title = dfCourseContent['Title'][idx],link = dfCourseContent['YouTube Link'][idx])
+        coursecontent = CourseContent(week = int(dfCourseContent['week'][idx]),index = dfCourseContent['index'][idx],type=dfCourseContent['type'][idx],title = dfCourseContent['title'][idx],link = dfCourseContent['link'][idx])
         db.session.add(coursecontent)
     db.session.commit()
     print('INFO: Writing data for course content complete')
