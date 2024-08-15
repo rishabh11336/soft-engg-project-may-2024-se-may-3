@@ -53,7 +53,8 @@
 <script>
 import downloadIcon from '../assets/download.svg';
 import closeIcon from '../assets/close.svg';
-import { getLectureSummary, getDoubtBotHelp } from '@/services/apiServices';
+import { getLectureSummary, getDoubtBotHelp} from '@/services/apiServices';
+
 
 export default {
   name: 'ChatWindow',
@@ -155,6 +156,18 @@ export default {
         this.isShow = false;
       }
     },
+    // handleDoubtBot() {
+    //   if (this.userQuery.trim()) {
+    //     postDoubtBotQuery(this.videoId, this.userQuery)
+    //       .then((response) => {
+    //         console.log("Response from DoubtBot:", response.data);
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error posting query to DoubtBot:", error);
+    //       });
+    //     this.userQuery = "";
+    //   }
+    // },
     handleDoubtBot() {
       if (!this.userQuery.trim()) return;
       this.loading = true;
