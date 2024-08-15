@@ -12,6 +12,7 @@ history = ''
 tokens = [
     "LL-7u9HFmV7Zyu9sCyDE7NpY7hjFfHt6p7h6Po9pLAi9d4VgkjwTTL9bnN51cKsDwJ7",
     "LL-Qm2wzWhTyYYAJV2kWgGhcbCLIVZBCOzSDuib1smXSsouoANM1YtgSfp3v9IlyQPW",
+    "LA-1a2dd27227054409818ce15f1af0c0d4768ec06fe2f64605a61ef536565249ed"
     "LA-dbfcbb80618f4c7ea1c27f4e20af79fd4af3c30849f94657aef232d0197082b5",
     "LA-51215ccf1b454a63a7d70253a0ac65b4c55758b2e56042e2a590def77849fe83"
     # Add more tokens if required
