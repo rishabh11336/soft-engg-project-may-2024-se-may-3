@@ -7,7 +7,7 @@ class QuestionAPI(Resource):
     def get(self, week=None):
         questions = Questions.query.filter_by(weeknumber=week)
         return jsonify([question.serialize() for question in questions])
-    
+
     def post(self):
         pass
 

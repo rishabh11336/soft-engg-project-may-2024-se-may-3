@@ -18,7 +18,7 @@ def updateProgrammingCourseContent():
     print("INFO: Writing data for  programming assignements")
     for idx in range(dfProgrammingAssignement.shape[0]):
         programmingAssignement = ProgrammingAssignments(
-            weeknumber = dfProgrammingAssignement['WeekNumber'][idx],
+            weeknumber = int(dfProgrammingAssignement['WeekNumber'][idx]),
             question = dfProgrammingAssignement['Question'][idx],
             public_test_case1 = dfProgrammingAssignement['PublicTestCase1'][idx],
             public_test_case2 = dfProgrammingAssignement['PublicTestCase2'][idx],
@@ -42,7 +42,7 @@ def updateWeeklyQuestions():
     print('INFO: Writing the data for all weeks')
     for idx in range(dataframe.shape[0]):
         question = Questions(type = dataframe['QuestionType'][idx], 
-                             weeknumber = dataframe['WeekNumber'][idx],
+                             weeknumber = int(dataframe['WeekNumber'][idx]),
                              question = dataframe['Question'][idx],
                              code_snippet = dataframe['CodeSnippet'][idx],
                              option1 = dataframe['Option1'][idx],
@@ -62,3 +62,4 @@ with app.app_context():
     updateCourseContent()
     updateProgrammingCourseContent()
     updateWeeklyQuestions()
+    db.session.close()
