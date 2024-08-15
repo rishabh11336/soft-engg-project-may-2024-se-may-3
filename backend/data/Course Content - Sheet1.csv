@@ -1,40 +1,40 @@
 id,Week,Index,Type,Title,YouTube Link
-1,1,1.1,Video,Introduction,https://www.youtube.com/embed/8ndsDXohLMQ
-2,1,1.2,Video,Introduction to Replit,https://www.youtube.com/embed/NgZZ0HIUqbs
-3,1,1.3,Video,"L1.3: More on Replit, print and Common Mistakes",https://www.youtube.com/embed/As7_aq6XGfI
-4,1,1.4,Video,L1.4: A Quick Introduction to Variables,https://www.youtube.com/embed/Yg6xzi2ie5s
-5,1,1.5,Video,L1.5: Variables and Input Statement,https://www.youtube.com/embed/ruQb8jzkGyQ
-6,1,1.6,Video,L1.6: Variables and Literals,https://www.youtube.com/embed/tDaXdoKfX0k
-7,1,1.7,Video,L1.7: Data Types 1,https://www.youtube.com/embed/8n4MBjuDBu4
-8,1,1.8,Video,L1.8: Data Types 2,https://www.youtube.com/embed/xQXxufhEJHw
-9,1,1.9,Video,L1.9: Operators and Expressions 1,https://www.youtube.com/embed/8pu73HKzNOE
-10,1,1.1,Video,L1.10: Operators and Expressions 2,https://www.youtube.com/embed/Y53K9FFu97Q
-11,1,1.11,Video,L1.11: Introduction to Strings,https://www.youtube.com/embed/sS89tiDuqoM
-12,1,1.12,Video,L1.12: More on Strings,https://www.youtube.com/embed/e45MVXwya7A
-13,1,1.13,Video,L1.13: Conclusion: FAQs,https://www.youtube.com/embed/_Ccezy5hlc8
-14,2,2.1,Video,L2.1: Introduction,https://www.youtube.com/embed/aEPFZSzZ6VQ
-15,2,2.2,Video,L2.2: Variables : A Programmer's Perspective,https://www.youtube.com/embed/XZSnqseRbZY
-16,2,2.3,Video,L2.3: Variables Revisited: Dynamic Typing,https://www.youtube.com/embed/2OFZY77eOjw
-17,2,2.4,Video,"L2.4: More on Variables, Operators and Expressions",https://www.youtube.com/embed/-f833WH_cVo
-18,2,2.5,Video,L2.5: Escape characters and types of quotes,https://www.youtube.com/embed/4vWM2oTGEio
-19,2,2.6,Video,L2.6: String Methods,https://www.youtube.com/embed/bRAo6TJJjCU
-20,2,2.7,Video,L2.7: An Interesting Cipher: More on Strings,https://www.youtube.com/embed/oxFYdHVNpg8
-21,2,2.8,Video,L2.8: Introduction to the if statement,https://www.youtube.com/embed/FTX5wF_3J9Q
-22,2,2.9,Video,"L2.9: Tutorial on if, else and else-if (elif) conditions",https://www.youtube.com/embed/-dBqiRCHbNw
-23,2,"""2.10""",Video,"L2.10: Introduction to ""import library""",https://www.youtube.com/embed/OdjXL5U95eI
-24,2,2.11,Video,L2.11: Different ways to import a library,https://www.youtube.com/embed/eW58_ky7oc8
-25,2,2.12,Video,L2.12: Conclusion,https://www.youtube.com/embed/DK16M8EvOLE
-26,3,3.1,Video,L3.1: Introduction,https://www.youtube.com/embed/xiEzc_m2izc
-27,3,3.2,Video,L3.2: Introduction to while loop,https://www.youtube.com/embed/KTvVNN7ia8o
-28,3,3.3,Video,L3.3: While to Compute Factorial,https://www.youtube.com/embed/-ZMw8D-Xapk
-29,3,3.4,Video,L3.4: Tutorial on while loop,https://www.youtube.com/embed/SqMeT9caxpE
-30,3,3.5,Video,L3.5: Introduction to for loop,https://www.youtube.com/embed/lvXuQ_x7EsI
-31,3,3.6,Video,L3.6: for loop to add the first n numbers,https://www.youtube.com/embed/lrbqrxIZcaQ
-32,3,3.7,Video,L3.7: for loop for multiplication tables,https://www.youtube.com/embed/SMASd0rbt0g
-33,3,3.8,Video,L3.8: More on range and for loop without range,https://www.youtube.com/embed/ihL3Eac9tFc
-34,3,3.9,Video,L3.9: Formatted Printing,https://www.youtube.com/embed/DR0BhSzGnPo
-35,3,"""3.10""",Video,L3.10: Tutorial on for loop and difference between while loop and for loop,https://www.youtube.com/embed/7D2SFKSiiLg
-36,3,3.11,Video,L3.11: Nested for loop,https://www.youtube.com/embed/-4MRaWABCuo
-37,3,3.12,Video,L3.12: Tutorial on nested loops,https://www.youtube.com/embed/590mjTALkj0
-38,3,3.13,Video,"L3.13: break, continue and pass",https://www.youtube.com/embed/SVAVQHfJbE0
-39,3,3.14,Video,L3.14: Conclusion,https://www.youtube.com/embed/DhjvmkGgw8U
+1,1,1.1,Video,Introduction,8ndsDXohLMQ
+2,1,1.2,Video,Introduction to Replit,NgZZ0HIUqbs
+3,1,1.3,Video,"L1.3: More on Replit, print and Common Mistakes",As7_aq6XGfI
+4,1,1.4,Video,L1.4: A Quick Introduction to Variables,Yg6xzi2ie5s
+5,1,1.5,Video,L1.5: Variables and Input Statement,ruQb8jzkGyQ
+6,1,1.6,Video,L1.6: Variables and Literals,tDaXdoKfX0k
+7,1,1.7,Video,L1.7: Data Types 1,8n4MBjuDBu4
+8,1,1.8,Video,L1.8: Data Types 2,xQXxufhEJHw
+9,1,1.9,Video,L1.9: Operators and Expressions 1,8pu73HKzNOE
+10,1,1.1,Video,L1.10: Operators and Expressions 2,Y53K9FFu97Q
+11,1,1.11,Video,L1.11: Introduction to Strings,sS89tiDuqoM
+12,1,1.12,Video,L1.12: More on Strings,e45MVXwya7A
+13,1,1.13,Video,L1.13: Conclusion: FAQs,_Ccezy5hlc8
+14,2,2.1,Video,L2.1: Introduction,aEPFZSzZ6VQ
+15,2,2.2,Video,L2.2: Variables : A Programmer's Perspective,XZSnqseRbZY
+16,2,2.3,Video,L2.3: Variables Revisited: Dynamic Typing,2OFZY77eOjw
+17,2,2.4,Video,"L2.4: More on Variables, Operators and Expressions",#NAME?
+18,2,2.5,Video,L2.5: Escape characters and types of quotes,4vWM2oTGEio
+19,2,2.6,Video,L2.6: String Methods,bRAo6TJJjCU
+20,2,2.7,Video,L2.7: An Interesting Cipher: More on Strings,oxFYdHVNpg8
+21,2,2.8,Video,L2.8: Introduction to the if statement,FTX5wF_3J9Q
+22,2,2.9,Video,"L2.9: Tutorial on if, else and else-if (elif) conditions",#NAME?
+23,2,"""2.10""",Video,"L2.10: Introduction to ""import library""",OdjXL5U95eI
+24,2,2.11,Video,L2.11: Different ways to import a library,eW58_ky7oc8
+25,2,2.12,Video,L2.12: Conclusion,DK16M8EvOLE
+26,3,3.1,Video,L3.1: Introduction,xiEzc_m2izc
+27,3,3.2,Video,L3.2: Introduction to while loop,KTvVNN7ia8o
+28,3,3.3,Video,L3.3: While to Compute Factorial,#NAME?
+29,3,3.4,Video,L3.4: Tutorial on while loop,SqMeT9caxpE
+30,3,3.5,Video,L3.5: Introduction to for loop,lvXuQ_x7EsI
+31,3,3.6,Video,L3.6: for loop to add the first n numbers,lrbqrxIZcaQ
+32,3,3.7,Video,L3.7: for loop for multiplication tables,SMASd0rbt0g
+33,3,3.8,Video,L3.8: More on range and for loop without range,ihL3Eac9tFc
+34,3,3.9,Video,L3.9: Formatted Printing,DR0BhSzGnPo
+35,3,"""3.10""",Video,L3.10: Tutorial on for loop and difference between while loop and for loop,7D2SFKSiiLg
+36,3,3.11,Video,L3.11: Nested for loop,-4MRaWABCuo
+37,3,3.12,Video,L3.12: Tutorial on nested loops,590mjTALkj0
+38,3,3.13,Video,"L3.13: break, continue and pass",SVAVQHfJbE0
+39,3,3.14,Video,L3.14: Conclusion,DhjvmkGgw8U
