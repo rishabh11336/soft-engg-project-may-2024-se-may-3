@@ -157,3 +157,47 @@ class ProgrammingSubmissions(db.Model):
             'user_output_private_test_case3': self.user_output_private_test_case3,
             'marks_awarded': self.marks_awarded
         }
+
+class Quiz(db.Model):
+    __tablename__ = 'quiz_questions'
+    id = db.Column(db.Integer,primary_key = True, autoincrement = True)
+    number = db.Column(db.String,nullable = False)
+    type = db.Column(db.String,nullable = False)
+    question = db.Column(db.String,nullable = False)
+    code_snippet = db.Column(db.String,nullable = False)
+    option1 = db.Column(db.String(255))
+    option2 = db.Column(db.String(255))
+    option3 = db.Column(db.String(255))
+    option4 = db.Column(db.String(255))
+    answer1 = db.Column(db.String(255))
+    answer2 = db.Column(db.String(255))
+    answer3 = db.Column(db.String(255))
+    answer4 = db.Column(db.String(255))
+    youranswer1 = db.Column(db.String(255))
+    youranswer2 = db.Column(db.String(255))
+    youranswer3 = db.Column(db.String(255))
+    youranswer4 = db.Column(db.String(255))
+        
+    def serialize(self):
+        return {
+        'id':self.id,
+        'question_number':self.number,
+        'question_type': self.type,
+        'question':self.question,
+        'code_snippet':self.code_snippet,
+        "option1": self.option1,
+        "option2": self.option2,
+        "option3": self.option3,
+        "option4": self.option4,
+        "answer1": self.answer1,
+        "answer2": self.answer2,
+        "answer3": self.answer3,
+        "answer4": self.answer4,
+        "youranswer1": self.youranswer1,
+        "youranswer2": self.youranswer2,
+        "youranswer3": self.youranswer3,
+        "youranswer4": self.answer4
+ 
+
+
+        }

@@ -1,7 +1,7 @@
 from main import app
 import csv
 import pandas as pd
-from application.models.model import db,CourseContent,Questions,ProgrammingAssignments
+from application.models.model import db,CourseContent,Questions,ProgrammingAssignments,Quiz
 
 def updateCourseContent():
     dfCourseContent = pd.read_csv('data/Course Content - Sheet1.csv')
@@ -38,7 +38,7 @@ def updateProgrammingCourseContent():
     print("INFO: Writing data form programming assignements COMPLETE")
 
 def updateWeeklyQuestions():
-    dataframe = pd.read_excel('data/ta_complete.xlsx')
+    dataframe = pd.read_excel('data/ta_complete_2.xlsx')
     print('INFO: Writing the data for all weeks')
     for idx in range(dataframe.shape[0]):
         question = Questions(type = dataframe['QuestionType'][idx], 
@@ -57,9 +57,38 @@ def updateWeeklyQuestions():
         db.session.add(question)
     print('INFO: Writing the data for all weeks complete')
     db.session.commit()
+
+def uploadQuizQuestions():
+    dataframe = pd.read_csv("data/QuizFile.csv")
+    print("INFO: Writing data for Quiz Questions")
+    for idx in range(dataframe.shape[0]):
+        quiz_questions = Quiz(
+            number = dataframe['QuestionNumber'][idx],
+            type = dataframe['QuestionType'][idx],
+            question = dataframe['Question'][idx],
+            code_snippet = dataframe['CodeSnippet'][idx],
+            option1 = dataframe['Option1'][idx],
+            option2 = dataframe['Option2'][idx],
+            option3 = dataframe['Option3'][idx],
+            option4 = dataframe['Option4'][idx],
+            answer1 = dataframe['Answer1'][idx],
+            answer2 = dataframe['Answer2'][idx],
+            answer3 = dataframe['Answer3'][idx],
+            answer4 = dataframe['Answer4'][idx],
+            youranswer1 = dataframe['YourAnswer1'][idx],
+            youranswer2 = dataframe['YourAnswer2'][idx],
+            youranswer3 = dataframe['YourAnswer3'][idx],
+            youranswer4 = dataframe['YourAnswer4'][idx],
+
+        )
+        db.session.add(quiz_questions)
+    print('INFO" Writing data for Quiz Questions Completed')
+
+
 with app.app_context():
     db.create_all()
     updateCourseContent()
     updateProgrammingCourseContent()
     updateWeeklyQuestions()
+    uploadQuizQuestions()
     db.session.close()

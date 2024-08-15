@@ -1,0 +1,66 @@
+QuestionNumber,QuestionType,Question,CodeSnippet,Option1,Option2,Option3,Option4,Answer1,Answer2,Answer3,Answer4,YourAnswer1,YourAnswer2,YourAnswer3,YourAnswer4
+1,Multi-choice,"What will f(1, 2) return?","def f(a, b, c=10, d=19):
+    return a + b + c + d",3,32,29,Syntax Error,32,,,,32,,,
+2,Multi-choice,"The below pattern keeps repeating for a thousand lines. If line number 500 evaluates to False, what is the value of E?","not E
+not not E
+not not not E
+.....",TRUE,FALSE,Cannot be determined,,FALSE,,,,TRUE,,,
+3,Multi-choice,"if n is a positive integer, what does g(n) return? Note that your answer should be applicable for any positive integer n, and not just for a specific value.","def f(n):
+    if n < 10:
+        return 1
+    return 1 + f(n // 10)
+
+def g(n):
+    if n ‹ 10:
+        return n
+    return n % 10 + g(n // 10)
+
+def h(n):
+    if n <= 1:
+        return n
+    return n * h(n - 1)",Sum of digits in n.,Number of digits in n.,Product of digits in n.,Factorial of n.,Sum of digits in n.,,,,Sum of digits in n.,,,
+4,Multi-choice,"If n is a positive integer, what does f(n) return? Note that your answer should be applicable for any positive integer n, and not just for a specific value.","def f(n):
+    if n < 10:
+        return 1
+    return 1 + f(n // 10)
+
+def g(n):
+    if n ‹ 10:
+        return n
+    return n % 10 + g(n // 10)
+
+def h(n):
+    if n <= 1:
+        return n
+    return n * h(n - 1)",Sum of digits in n.,Number of digits in n.,Product of digits in n.,Factorial of n.,Number of digits in n.,,,,Number of digits in n.,,,
+5,Multi-choice,What does the count attribute represent?,"class Student:
+    count = 0
+    def __init__(self, name, rollNo=None, mathMarks=None, physicsMarks=None,
+chemistryMarks=None):
+        Student.count += 1
+        self.rollNo = rollNo
+        self.name = name
+        self.mathMarks = mathMarks
+        self.physicsMarks = physicsMarks
+        self.chemistryMarks = chemistryMarks
+class Group:
+    def __init__(self):
+        self.members = []
+    def add(self, studentObj):
+        self.members.append(studentObj)
+    def remove(self, studentObj):
+        self.members.remove(studentObj)
+    def printMembers(self):
+        for i in self.members:
+            print(i.name)",Number of classes,Number of objects,Number of Student objects,No meaningful information,Number of Student objects,,,,Number of Student objects,,,
+6,Multi-choice,What will the variable i represent at the end of execution where x is a positive integer?,"x = int(input())
+i=0
+while x % 10**i != x:
+        i=i+1",Number of zeros in x,Number of ones in x,Number of digits in x,Number of non-zero digits,Number of digits of x,,,,Number of non-zero digits,,,
+7,Multi-choice,What will be the output of the code?,"def assert(x):
+    return x==int(str(x))
+assert(1)",TRUE,FALSE,Retuns Nothing,Syntax Error,Syntax Error,,,,Syntax Error,,,
+8,Multi-choice,Select all the correct options to remove “Orange” from the set. It is a Multiple Select Question(MSQ).,"sampleSet = {""Yellow"", ""Orange"", ""Black""}","sampleSet.pop(""Orange"")","sampleSet.discard(""Orange"")","sampleSet.destroy(""Orange"")","del sampleSet[""Orange""]","sampleSet.discard(""Orange"")",,,,"sampleSet.pop(""Orange"")",,,
+9,Multi-choice,What is the type of the following expression?,1>0and-1<0and1==1,str,bool,TRUE,FALSE,bool,,,,bool,,,
+10,Multi-choice,The variable fruit_iter is an iterator object on a list fruit_list . Which of the following statement is True?,"fruit_list = [""apple"", ""mango"", ""orange""]
+fruit_iter= iter(fruit_list)",The iterator fruit_iter can access elements from left to right,The iterator fruit_iter can access elements from right to left,Both A and B,NOTA,The iterator fruit_iter can access elements from left to right,,,,The iterator fruit_iter can access elements from left to right,,,
