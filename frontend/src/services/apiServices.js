@@ -40,8 +40,16 @@ export const getLectureSummary = (week_number, lecture_id) => {
   );
 };
 
-export const getDoubtBotHelp = (video_id) => {
-  return axios.get(`${API_BASE_URL}/genai/doubtbot/${video_id}`);
+export const getDoubtBotHelp = (video_id, userQuery) => {
+  return axios.get(`${API_BASE_URL}/genai/doubtbot/${video_id}/${userQuery}`);
+};
+
+// export const sendUserQuery = (userQuery) => {
+//   return axios.post(`${API_BASE_URL}/genai/doubtbot/${video_id}`, {userQuery});
+// };
+
+export const postDoubtBotQuery = (video_id, user_query) => {
+  return axios.post(`${API_BASE_URL}/genai/doubtbot`, { video_id, user_query });
 };
 
 export const getTheoryQuestionExplaination = (question_number) => {
