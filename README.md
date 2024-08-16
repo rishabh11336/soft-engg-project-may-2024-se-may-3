@@ -1,6 +1,35 @@
 # soft-engg-project-may-2024-se-may-3
+## Steps to run project
+**Steps to run Frontend**
+```
+1) set current directory to frontend
+```
+```
+2) hit "npm install" to install all front end requirements
+```
+```
+3) enter "npm run serve"
+```
+**Steps to run Backend**
+```
+4) open another cmd/terminal
+```
+```
+5) set current directory to backend
+```
+```
+6) create and activate virtual environment
+```
+```
+7) install all required libraries from requirements.txt using "pip install -r requirements.txt"
+```
+```
+8) run the main.py python file 
+```
+```
+9) go back to the npm run serve terminal, and open the first link it shows, localhost:8000
+```
 ## Project statement
-
 **Effective integration of Generative AI into programming learning environments**
 
 The primary way in which learners engage with content in the IITM BS degree program is through the SEEK portal. The portal contains learning videos, assignments, resources, practice and graded assignments, and programming quizzes. The portal can be described as a learning environment and provides opportunities for self-learning, by enabling learners to learn at their own pace and schedule.
