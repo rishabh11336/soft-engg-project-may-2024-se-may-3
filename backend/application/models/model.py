@@ -143,6 +143,7 @@ class ProgrammingSubmissions(db.Model):
     user_output_private_test_case2 = db.Column(db.String(255))
     user_output_private_test_case3 = db.Column(db.String(255))
     marks_awarded = db.Column(db.Float, nullable=False)
+    SUBMITCODE = db.Column(db.String(300), nullable=False)
 
     def serialize(self):
         return {
@@ -155,7 +156,8 @@ class ProgrammingSubmissions(db.Model):
             'user_output_private_test_case1': self.user_output_private_test_case1,
             'user_output_private_test_case2': self.user_output_private_test_case2,
             'user_output_private_test_case3': self.user_output_private_test_case3,
-            'marks_awarded': self.marks_awarded
+            'marks_awarded': self.marks_awarded,
+            'submit_code': self.SUBMITCODE
         }
 
 class Quiz(db.Model):
