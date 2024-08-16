@@ -82,11 +82,12 @@
           Get help
         </button>
         <div :key="question.number" v-if="showExplanation[question.number]">
-          <div v-if="loading[question.number]">
+          <div v-if="loading[question.number]" class="loading">
             <p>Loading explanation...</p>
           </div>
-          <div v-else-if="explanations[question.number]">
-            <p>{{ explanations[question.number] }}</p>
+          <div v-else-if="explanations[question.number]" class="explanation">
+            <p><strong>Explanation:</strong></p>
+            <p v-html="explanations[question.number]"></p>
           </div>
         </div>
       </div>
@@ -157,15 +158,27 @@ export default {
       this.loading[question_number] = true;
       getTheoryQuestionExplaination(question_number)
         .then((response) => {
-          this.explanations[question_number] = response.data.explanation;
+          this.explanations[question_number] = this.formattedExplanation(
+            response.data.explanation
+          );
         })
         .catch((error) => {
-          this.explanations[question_number] = 'Sorry, something went wrong';
+          this.explanations[question_number] = this.formattedExplanation(
+            'Sorry, something went wrong'
+          );
           console.error(error);
         })
         .finally(() => {
           this.loading[question_number] = false;
         });
+    },
+
+    // method to format summary
+    formattedExplanation(explanation) {
+      // Replace newline characters with <br> tags
+      return explanation
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Replace **text** with <strong>text</strong>
+        .replace(/\n/g, '<br>'); // Replace newline characters with <br> tags;
     },
   },
   mounted() {
@@ -253,5 +266,18 @@ button {
 
 .help-btn {
   margin: 10px 5px 5px 0px;
+}
+
+.explanation {
+  background-color: rgb(248, 243, 243);
+  padding: 10px;
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.loading p {
+  color: coral;
+  font-size: 18px;
 }
 </style>
