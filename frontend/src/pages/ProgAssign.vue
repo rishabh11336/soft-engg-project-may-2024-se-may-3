@@ -1,12 +1,16 @@
 <template>
   <div class="prog-assign-container" v-if="assignment">
     <div class="prog-assign-header">
+      <h2>Programming Assignment {{ currentWeekNumber }}</h2>
       <p>The due date for submitting this assignment has passed.</p>
       <p><strong>Due: </strong> 15 Sep 2021 23:59 IST</p>
     </div>
     <div class="question-note">
       <p>{{ assignment.question }}</p>
-      <button class="help-btn" @click="fetchProgrammingQuestionTheory(assignment.id)">
+      <button
+        class="help-btn"
+        @click="fetchProgrammingQuestionTheory(assignment.id)"
+      >
         Get help
       </button>
       <div :key="assignment.id" v-if="showExplanation">
@@ -14,7 +18,8 @@
           <p>Loading explanation...</p>
         </div>
         <div v-else-if="explanation" class="explaination">
-          <div><strong>Explanation:</strong> {{ explanation }}</div>
+          <div><strong>Explanation:</strong></div>
+          <div v-html="formattedExplanation"></div>
         </div>
       </div>
       <p>
@@ -39,39 +44,63 @@
     </div>
 
     <div class="tabs">
-      <button :class="{ active: activeTab === 'response' }" @click="activeTab = 'response'">
+      <button
+        :class="{ active: activeTab === 'response' }"
+        @click="activeTab = 'response'"
+      >
         Your Response
       </button>
-      <button :class="{ active: activeTab === 'solution' }" @click="activeTab = 'solution'">
+      <button
+        :class="{ active: activeTab === 'solution' }"
+        @click="activeTab = 'solution'"
+      >
         Solution code
       </button>
     </div>
 
     <div v-if="activeTab === 'response'" class="editor-container">
-      <codemirror v-model="userCode" placeholder="Write your code here..." :style="{ height: '100%', width: '100%' }"
-        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
+      <codemirror
+        v-model="userCode"
+        placeholder="Write your code here..."
+        :style="{ height: '100%', width: '100%' }"
+        :autofocus="true"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="extensions"
+        @ready="handleReady"
+      />
     </div>
     <div v-if="activeTab === 'solution'" class="editor-container">
-      <codemirror v-model="solutionCode" placeholder="Solution..." :style="{ height: '100%', width: '100%' }"
-        :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
+      <codemirror
+        v-model="solutionCode"
+        placeholder="Solution..."
+        :style="{ height: '100%', width: '100%' }"
+        :autofocus="true"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="extensions"
+        @ready="handleReady"
+      />
     </div>
-
 
     <p class="msg">(Please run code before submitting)</p>
     <div class="btn-container">
       <button @click="runCode" class="run-btn">Run</button>
-      <button @click="submitAnswers" :disabled="!isSubmitEnabled">Submit</button>
+      <button @click="submitAnswers" :disabled="!isSubmitEnabled">
+        Submit
+      </button>
     </div>
-
-    <!-- <div class="console">
-      <h2 class="console-header">Console</h2>
-      <hr>
-      <pre>>>> {{ output }}</pre>
-    </div> -->
     <div class="test-cases">
       <h3>Public Test Cases:</h3>
-      <div v-for="(testCase, index) in publicTestCases" :key="index" class="test-case">
-        <p><strong>Test Case {{ index + 1 }}:</strong> Input: {{ testCase.input }}</p>
+      <div
+        v-for="(testCase, index) in publicTestCases"
+        :key="index"
+        class="test-case"
+      >
+        <p>
+          <strong>Test Case {{ index + 1 }}:</strong> Input:
+          {{ testCase.input }}
+        </p>
         <div class="test-case-results">
           <div>
             <label>Expected Output:</label>
@@ -80,7 +109,12 @@
           <div>
             <label>Your Output:</label>
             <pre
-              :class="{ passed: testCase.userOutput === testCase.expectedOutput, failed: testCase.userOutput !== testCase.expectedOutput }">{{ testCase.userOutput }}</pre>
+              :class="{
+                passed: testCase.userOutput === testCase.expectedOutput,
+                failed: testCase.userOutput !== testCase.expectedOutput,
+              }"
+              >{{ testCase.userOutput }}</pre
+            >
           </div>
         </div>
       </div>
@@ -102,15 +136,12 @@
         </div>
       </div>
     </div> -->
-
   </div>
-  <div v-else>
-    Loading assignment...
-  </div>
+  <div v-else>Loading assignment...</div>
 </template>
 
 <script>
-import { defineComponent, ref, shallowRef } from 'vue';
+import { computed, defineComponent, ref, shallowRef } from 'vue';
 import { Codemirror } from 'vue-codemirror';
 import { python } from '@codemirror/lang-python';
 import {
@@ -119,7 +150,6 @@ import {
   getProgrammingQuestionExplaination,
   runProgAssignCode,
 } from '@/services/apiServices';
-
 export default defineComponent({
   name: 'ProgAssign',
   components: {
@@ -143,6 +173,7 @@ export default defineComponent({
     const loading = ref(false);
     const showExplanation = ref(false);
     const isSubmitEnabled = ref(false);
+    const currentWeekNumber = ref('');
 
     const handleReady = (payload) => {
       view.value = payload.view;
@@ -160,7 +191,7 @@ export default defineComponent({
 
         const results = {
           public: [],
-          private: []
+          private: [],
         };
 
         // Running public test cases
@@ -168,14 +199,14 @@ export default defineComponent({
           console.log(`Running test case with input: ${testCase.input}`);
           const response = await runProgAssignCode({
             code: userCode.value,
-            input: String(testCase.input)  // Passing input as string
+            input: String(testCase.input), // Passing input as string
           });
           const userOutput = response.data.output.trim();
 
           testCase.userOutput = userOutput;
           results.public.push({
             ...testCase,
-            passed: userOutput === testCase.expectedOutput
+            passed: userOutput === testCase.expectedOutput,
           });
         }
 
@@ -184,22 +215,25 @@ export default defineComponent({
           console.log(`Running test case with input: ${testCase.input}`);
           const response = await runProgAssignCode({
             code: userCode.value,
-            input: String(testCase.input)
+            input: String(testCase.input),
           });
           const userOutput = response.data.output.trim();
 
           testCase.userOutput = userOutput;
           results.private.push({
             ...testCase,
-            passed: userOutput === testCase.expectedOutput
+            passed: userOutput === testCase.expectedOutput,
           });
         }
 
-        output.value = `Public Test Cases: ${results.public.filter(r => r.passed).length} passed, ${results.public.filter(r => !r.passed).length} failed\n`;
-        output.value += `Private Test Cases: ${results.private.filter(r => r.passed).length} passed, ${results.private.filter(r => !r.passed).length} failed\n`;
+        output.value = `Public Test Cases: ${
+          results.public.filter((r) => r.passed).length
+        } passed, ${results.public.filter((r) => !r.passed).length} failed\n`;
+        output.value += `Private Test Cases: ${
+          results.private.filter((r) => r.passed).length
+        } passed, ${results.private.filter((r) => !r.passed).length} failed\n`;
 
         isSubmitEnabled.value = true;
-
       } catch (err) {
         console.error('Error running code:', err);
         output.value = `Error: ${err.message}`;
@@ -207,10 +241,10 @@ export default defineComponent({
       }
     };
 
-
     // fetch Porgramming questions
     const fetchProgAssignments = (week_number) => {
       getProgrammingAssignments(week_number).then((response) => {
+        currentWeekNumber.value = week_number;
         assignments.value = response.data;
         assignment.value = response.data[0]; // assuming one assignment for now
         publicTestCases.value = [
@@ -265,15 +299,15 @@ export default defineComponent({
       };
 
       submitProgrammingAssignments(submissionData)
-        .then(response => {
-          console.log("Submission successful:", response.data);
+        .then((response) => {
+          console.log('Submission successful:', response.data);
 
           const marks = response.data.marks_awarded;
 
           window.alert(`Submission Successful!\nMarks: ${marks}`);
         })
-        .catch(error => {
-          console.error("Error submitting answers:", error);
+        .catch((error) => {
+          console.error('Error submitting answers:', error);
         });
     };
 
@@ -293,6 +327,13 @@ export default defineComponent({
           loading.value = false;
         });
     };
+
+    const formattedExplanation = computed(() => {
+      // Replace newline characters with <br> tags
+      return explanation.value
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Replace **text** with <strong>text</strong>
+        .replace(/\n/g, '<br>'); // Replace newline characters with <br> tags;
+    });
 
     return {
       selectedLanguage,
@@ -316,7 +357,17 @@ export default defineComponent({
       loading,
       fetchProgrammingQuestionTheory,
       isSubmitEnabled,
+      currentWeekNumber,
+      formattedExplanation,
     };
+  },
+  mounted() {
+    const weekNumber = parseInt(this.$route.params.week);
+    if (!isNaN(weekNumber)) {
+      this.fetchProgAssignments(weekNumber);
+    } else {
+      console.error('Invalid route parameters');
+    }
   },
 
   watch: {
@@ -336,12 +387,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.prog-assign-container {
+  padding: 10px;
+}
 .prog-assign-header {
   background-color: brown;
   padding: 10px;
 }
 
-.prog-assign-header p {
+.prog-assign-header p,
+h2 {
   color: white;
 }
 
@@ -449,7 +504,7 @@ button {
   margin-bottom: 20px;
 }
 
-.test-case-results>div {
+.test-case-results > div {
   flex: 1;
   margin-right: 10px;
 }
@@ -466,8 +521,10 @@ button {
 
 .explaination {
   background-color: rgb(233, 228, 228);
-  padding: 5px 10px;
+  padding: 10px;
   margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .help-btn {

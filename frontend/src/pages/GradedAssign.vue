@@ -1,6 +1,6 @@
 <template>
-  <div v-if="assignments">
-    <h2>Graded Assignment 1</h2>
+  <div v-if="assignments.length">
+    <h2>Graded Assignment {{ currentWeekNumber }}</h2>
     <div class="assignment-wrapper">
       <strong>
         You may submit any number of times before the due date. The final
@@ -75,7 +75,10 @@
             />
           </div>
         </div>
-        <button class="help-btn" @click="fetchQuestionTheory(question.number)">
+        <button
+          class="help-btn"
+          @click="fetchQuestionExplanation(question.number)"
+        >
           Get help
         </button>
         <div :key="question.number" v-if="showExplanation[question.number]">
@@ -111,19 +114,23 @@ export default {
       explanations: {},
       loading: {},
       showExplanation: {},
+      currentWeekNumber: null, // Track the current week number
     };
   },
   methods: {
-    fetchAssignments(week_number) {
-      getAssignments(week_number).then((response) => {
+    // method to fetch assignment
+    fetchAssignments(weekNumber) {
+      getAssignments(weekNumber).then((response) => {
         this.assignments = response.data;
+        this.currentWeekNumber = weekNumber;
       });
     },
 
+    // method to submit assignment
     submitAnswers() {
       const submissionData = this.assignments.map((question) => ({
         number: question.number,
-        weeknumber: question.weeknumber,
+        weeknumber: this.currentWeekNumber,
         submitted_answers: [
           this.selectedAnswers[question.number] || '',
           '',
@@ -143,7 +150,8 @@ export default {
       });
     },
 
-    fetchQuestionTheory(question_number) {
+    // method to fetch Assignment question explanation
+    fetchQuestionExplanation(question_number) {
       this.showExplanation[question_number] =
         !this.showExplanation[question_number];
       this.loading[question_number] = true;
@@ -160,13 +168,22 @@ export default {
         });
     },
   },
+  mounted() {
+    const weekNumber = parseInt(this.$route.params.week);
+    if (!isNaN(weekNumber)) {
+      this.fetchAssignments(weekNumber);
+    } else {
+      console.error('Invalid route parameters');
+    }
+  },
+
   watch: {
     '$route.params': {
-      immediate: true, // Trigger on component mount
+      immediate: true,
       handler(newParams) {
-        const week = parseInt(newParams.week);
-        if (!isNaN(week)) {
-          this.fetchAssignments(week);
+        const weekNumber = parseInt(newParams.week);
+        if (!isNaN(weekNumber)) {
+          this.fetchAssignments(weekNumber);
         } else {
           console.error('Invalid route parameters');
         }

@@ -2,24 +2,23 @@
   <NavBar heading="Python" />
   <div class="course-container">
     <SideBar />
-    <CourseSection />
+    <CourseMenu />
     <ContentSection />
     <ChatWindow />
   </div>
 </template>
 <script>
-import NavBar from './NavBar.vue';
-import SideBar from './SideBar.vue';
-import CourseSection from './CourseSection.vue';
-import ContentSection from './ContentSection.vue';
-import ChatWindow from './ChatWindow.vue';
-
+import NavBar from '@/components/NavBar.vue';
+import SideBar from '@/components/SideBar.vue';
+import CourseMenu from '@/components/CourseMenu.vue';
+import ContentSection from '@/components/ContentSection.vue';
+import ChatWindow from '@/components/ChatWindow.vue';
 export default {
   name: 'CourseComp',
   components: {
     NavBar,
     SideBar,
-    CourseSection,
+    CourseMenu,
     ContentSection,
     ChatWindow,
   },

@@ -25,7 +25,7 @@
               <p>{{ chat.sender }}</p>
             </div>
             <div class="receiver" v-if="chat.receiver">
-              <p>{{ chat.receiver }}</p>
+              <p v-html="chat.receiver"></p>
             </div>
           </div>
         </div>
@@ -53,8 +53,7 @@
 <script>
 import downloadIcon from '../assets/download.svg';
 import closeIcon from '../assets/close.svg';
-import { getLectureSummary, getDoubtBotHelp} from '@/services/apiServices';
-
+import { getLectureSummary, getDoubtBotHelp } from '@/services/apiServices';
 
 export default {
   name: 'ChatWindow',
@@ -83,20 +82,27 @@ export default {
     },
   },
   methods: {
+    // conditional rendering of summary button
     updateShowSummary(route) {
       if (
         route.startsWith('/course/graded-assignment') ||
-        route.startsWith('/course/ppa1') ||
-        route.startsWith('/course/about')
+        route.startsWith('/course/ppa') ||
+        route.startsWith('/course/about') ||
+        route.startsWith('/course/video') ||
+        route.startsWith('/grade-details')
       ) {
         this.showSummary = false;
       } else {
         this.showSummary = true;
       }
     },
+
+    // method to close or open ChatWindow
     handleWindow() {
       this.isShow = !this.isShow;
     },
+
+    // method to export chat
     handleExport() {
       const chatsText = this.chatList
         .map((chat) => `You - ${chat.sender} AI - ${chat.receiver}`)
@@ -115,13 +121,22 @@ export default {
       document.body.removeChild(link);
     },
 
+    // method to format summary
+    formatSummaryContent(summary) {
+      if (!summary) return '';
+      return summary
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Convert **bold** to <strong>bold</strong>
+        .replace(/\n/g, '<br>'); // Convert newlines to <br> tags
+    },
+
+    // method to fetch lecture summary
     fetchLectureSummary(week_number, lecture_id) {
       this.loading = true;
       getLectureSummary(week_number, lecture_id)
         .then((response) => {
           this.chatList.push({
             id: this.chatList.length + 1,
-            receiver: response.data.summary,
+            receiver: this.formatSummaryContent(response.data.summary),
           });
         })
         .catch((error) => {
@@ -130,7 +145,9 @@ export default {
           this.chatList = [
             {
               id: 3,
-              receiver: 'Sorry, someting went wrong, try again...',
+              receiver: this.formatSummaryContent(
+                'Sorry, someting went wrong, try again...'
+              ),
             },
           ];
         })
@@ -138,6 +155,8 @@ export default {
           this.loading = false;
         });
     },
+
+    // method to summarise lecture content
     handleSummarise() {
       let route = this.$route.path;
       let week_number = parseInt(route.charAt(route.length - 3));
@@ -147,6 +166,7 @@ export default {
       this.isShow = true;
     },
 
+    // method to close ChatWindow while clicking anywhere except chatwindow
     handleClickOutside(event) {
       if (
         this.isShow &&
@@ -156,18 +176,8 @@ export default {
         this.isShow = false;
       }
     },
-    // handleDoubtBot() {
-    //   if (this.userQuery.trim()) {
-    //     postDoubtBotQuery(this.videoId, this.userQuery)
-    //       .then((response) => {
-    //         console.log("Response from DoubtBot:", response.data);
-    //       })
-    //       .catch((error) => {
-    //         console.error("Error posting query to DoubtBot:", error);
-    //       });
-    //     this.userQuery = "";
-    //   }
-    // },
+
+    // Chat doubt bot method
     handleDoubtBot() {
       if (!this.userQuery.trim()) return;
       this.loading = true;
@@ -179,7 +189,7 @@ export default {
           this.chatList.push({
             id: this.chatList.length + 1,
             sender: this.userQuery,
-            receiver: response.data.response,
+            receiver: this.formatSummaryContent(response.data.response),
           });
           this.userQuery = '';
         })
