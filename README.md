@@ -2,14 +2,28 @@
 ## Steps to run project
 **Steps to run Frontend**
 ```
-1) set current directory to frontend
+cd frontend
 ```
 ```
-2) hit "npm install" to install all front end requirements
+npm install
 ```
+
+### Compiles and hot-reloads for development
 ```
-3) enter "npm run serve"
+npm run serve
 ```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+<br>
+
 **Steps to run Backend**
 ```
 4) open another cmd/terminal
