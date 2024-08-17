@@ -306,8 +306,8 @@ def generate_explanation(question, code_snippet, correct_answer, user_answer):
     for token in tokens:
         try:
             client = get_client(token)
-            response = client.chat.completions.create(
-                model="llama3-70b",
+             response = client.chat.complete(
+                model="open-mistral-nemo",
                 messages=[
                     {"role": "system", "content": "You are a Python expert. Individuals will ask you for feedback on incorrect answers to python questions. Provide a detailed explanation for the correct answer and what the user should review."},
                     {"role": "user", "content": prompt}
