@@ -200,7 +200,7 @@ def PAfeedback(question, code):
         try:
             client = get_client(token)
             response = client.chat.completions.create(
-                model="llama3-70b",
+                model="open-mistral-nemo",
                 messages=[
                     {"role": "system",
                      "content": "You are given a coding question, and the code written by a student. Provide feedback for the code, and suggest possible improvements"},
