@@ -31,17 +31,18 @@
       <!-- Graded Assignment -->
 
       <div
+        v-if="theory_assignments.length > 0"
         class="first"
         @click="navigateTo(`/course/graded-assignment/${week.number}`)"
       >
         <input
           type="radio"
           name="course-content"
-          :id="`assignment-${week.number}`"
+          :id="`intro-${week.number}`"
         />
-        <label :for="`assignment-${week.number}`">
+        <label :for="`intro-${week.number}`">
           <p>
-            Graded Assignment <br />
+            Theory Assignment <br />
             <span>Assignment</span>
           </p>
         </label>
@@ -53,11 +54,15 @@
         class="first"
         @click="navigateTo(`/course/ppa/${week.number}`)"
       >
-        <input type="radio" name="week-content" :id="`ppa-${week.number}`" />
-        <label :for="`ppa-${week.number}`">
+        <input
+          type="radio"
+          name="week-content"
+          :id="`intro-prog-${week.number}`"
+        />
+        <label :for="`intro-prog-${week.number}`">
           <p>
-            PPA {{ week.number }} - Not Graded<br />
-            <span>Programming Assignment</span>
+            Programming Assignment<br />
+            <span> Assignment</span>
           </p>
         </label>
       </div>
@@ -82,6 +87,10 @@ export default {
       required: true,
     },
     prog_assignments: {
+      type: Array,
+      required: true,
+    },
+    theory_assignments: {
       type: Array,
       required: true,
     },

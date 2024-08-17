@@ -9,6 +9,7 @@
       :toggleContent="toggleContent"
       :weekContent="weekContent"
       :prog_assignments="prog_assignments"
+      :theory_assignments="theory_assignments"
     />
   </div>
 </template>
@@ -17,6 +18,7 @@
 import {
   getWeekContent,
   getProgrammingAssignments,
+  getAssignments,
 } from '@/services/apiServices';
 import CourseIntro from './CourseIntro.vue';
 import WeekContent from './WeekContent.vue';
@@ -47,6 +49,7 @@ export default {
       weekContent: [],
       prog_assignments: [],
       prog_assign_count: 0,
+      theory_assignments: [],
     };
   },
   methods: {
@@ -63,6 +66,7 @@ export default {
           this.introContent = false;
           if (week.showContent) {
             this.fetchWeekContent(weekNumber);
+            this.fetchTheoryAssignments(weekNumber);
             this.fetchProgAssignments(weekNumber);
           }
         } else {
@@ -92,6 +96,12 @@ export default {
       getProgrammingAssignments(week_number).then((response) => {
         this.prog_assignments = response.data;
         this.prog_assign_count = response.data.length;
+      });
+    },
+
+    fetchTheoryAssignments(week_number) {
+      getAssignments(week_number).then((response) => {
+        this.theory_assignments = response.data;
       });
     },
   },

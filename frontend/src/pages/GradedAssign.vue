@@ -1,6 +1,7 @@
 <template>
   <div v-if="assignments.length">
     <h2>Graded Assignment {{ currentWeekNumber }}</h2>
+    <h3>Due date for this assignment is 21 August.</h3>
     <div class="assignment-wrapper">
       <strong>
         You may submit any number of times before the due date. The final
@@ -8,14 +9,16 @@
       </strong>
       <div
         class="question-answer"
-        v-for="question in assignments"
+        v-for="(question, index) in assignments"
         :key="question.number"
       >
         <div class="question-wrapper">
-          <p>{{ question.question }}</p>
+          <p>{{ index + 1 }}. {{ question.question }}</p>
           <strong>1 point</strong>
         </div>
-        <div class="question">{{ question.code_snippet }}</div>
+        <div v-if="question.code_snippet" class="question">
+          {{ question.code_snippet }}
+        </div>
         <div v-if="question.type === 'Multi-choice'">
           <div v-if="question.option4">
             <input
@@ -75,6 +78,12 @@
             />
           </div>
         </div>
+        <p v-if="showAnswer" class="correct-answer">
+          <strong>Correct Answer:</strong> {{ question.answer1 }}
+          {{ question.answer2 }}
+          {{ question.answer3 }}
+          {{ question.answer4 }}
+        </p>
         <button
           class="help-btn"
           @click="fetchQuestionExplanation(question.number)"
@@ -116,6 +125,7 @@ export default {
       loading: {},
       showExplanation: {},
       currentWeekNumber: null, // Track the current week number
+      showAnswer: false,
     };
   },
   methods: {
@@ -129,16 +139,20 @@ export default {
 
     // method to submit assignment
     submitAnswers() {
-      const submissionData = this.assignments.map((question) => ({
-        number: question.number,
-        weeknumber: this.currentWeekNumber,
-        submitted_answers: [
-          this.selectedAnswers[question.number] || '',
-          '',
-          '',
-          '',
-        ],
-      }));
+      const submissionData = this.assignments.map(
+        (question) => ({
+          number: question.number,
+          weeknumber: this.currentWeekNumber,
+          submitted_answers: [
+            this.selectedAnswers[question.number] || '',
+            '',
+            '',
+            '',
+          ],
+        }),
+        (this.showAnswer = true),
+        alert('Submission successfully')
+      );
 
       submissionData.forEach((submission) => {
         submitAnswers(submission)
@@ -210,7 +224,7 @@ export default {
 .assignment-wrapper {
   background-color: rgb(247, 246, 246);
   padding: 15px;
-  height: 800px;
+  height: auto;
 }
 
 .question-answer {
@@ -234,10 +248,10 @@ export default {
 
 .question {
   background-color: transparent;
-  height: 15px;
+  height: max-content;
   padding: 10px;
   color: rgb(8, 25, 250);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   border: 1px solid gray;
   border-radius: 5px;
@@ -279,5 +293,14 @@ button {
 .loading p {
   color: coral;
   font-size: 18px;
+}
+
+.correct-answer {
+  color: green;
+  font-size: 16px;
+}
+
+h3 {
+  color: brown;
 }
 </style>
