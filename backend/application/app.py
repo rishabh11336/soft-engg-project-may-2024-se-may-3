@@ -21,6 +21,8 @@ from .resources.GenaiAPI.doubtbot import doubtbotAPI
 from .resources.Coursecontent.videocontentAPI import VideoContentAPI
 from .resources.QuizQuestions.quizquestionAPI import QuizQuestionAPI
 from .resources.Code.run_code import RunPython
+from .resources.GenaiAPI.quizreviewAPI import QuizReview
+from .resources.GenaiAPI.programmingFeedBack import ProgrammingFeeback
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
@@ -89,6 +91,12 @@ app.add_url_rule("/api/genai/explainprogramming/<int:id>", view_func=ExplainProg
 
 # doubtbot api
 app.add_url_rule('/api/genai/doubtbot/<int:video_id>/<string:user_query>',view_func=doubtbotAPI.as_view('genai_doubtbot'), methods = ['GET'])
+
+# Quiz Review API
+app.add_url_rule('/api/genai/quizreview',view_func=QuizReview.as_view('quiz_question'),methods = ['GET'])
+
+# Programming Assignement Feedback
+app.add_url_rule('/api/programmingfeedback/<int:week>',view_func=ProgrammingFeeback.as_view('prograamming_feedback'),methods = ['GET'])
 
 # check for database and create if not exists
 with app.app_context():

@@ -195,6 +195,7 @@ def doubtbot(video_id,transcript, question="How does list append works"):
 
 
 #PROGRAMMING ASSIGNMENT REVIEW
+#! This needs to fetch questions for a questions from the programming_assignement table and code from the programming_submisson 
 def PAfeedback(question, code):
     for token in tokens:
         try:
@@ -218,6 +219,7 @@ def PAfeedback(question, code):
 
 #QUIZ REVIEW FROM HERE
 def quiz_review(quiz_records):
+    #! Entire rows should be put as the input
     feedback = ""
     incorrect_questions = []
     topic_areas = {}
@@ -277,6 +279,7 @@ def quiz_review(quiz_records):
     return feedback
 
 # Update topic areas based on question content
+#! This is a helper functions
 def update_topic_areas(topic_areas, question):
     potential_topics = ['loops', 'functions', 'recursion', 'conditionals', 'data structures', 'object-oriented programming']
     for topic in potential_topics:
@@ -287,6 +290,7 @@ def update_topic_areas(topic_areas, question):
                 topic_areas[topic] = 1
 
 # Function to generate explanations using LLaMA API
+#! This is a helper function
 def generate_explanation(question, code_snippet, correct_answer, user_answer):
     # Construct the prompt for LLaMA
     prompt = f"""
