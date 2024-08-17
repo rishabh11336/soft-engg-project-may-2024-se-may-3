@@ -63,7 +63,7 @@ def uploadQuizQuestions():
     print("INFO: Writing data for Quiz Questions")
     for idx in range(dataframe.shape[0]):
         quiz_questions = Quiz(
-            number = dataframe['QuestionNumber'][idx],
+            number = int(dataframe['QuestionNumber'][idx]),
             type = dataframe['QuestionType'][idx],
             question = dataframe['Question'][idx],
             code_snippet = dataframe['CodeSnippet'][idx],
@@ -83,6 +83,7 @@ def uploadQuizQuestions():
         )
         db.session.add(quiz_questions)
     print('INFO" Writing data for Quiz Questions Completed')
+    db.session.commit()
 
 
 with app.app_context():

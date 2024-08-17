@@ -19,7 +19,7 @@ from .resources.GenaiAPI.explainTheoryQuestionAPI import ExplainTheoryQuestionAP
 from .resources.GenaiAPI.explainProgrammingQuestionAPI import ExplainProgrammingQuestionAPI
 from .resources.GenaiAPI.doubtbot import doubtbotAPI
 from .resources.Coursecontent.videocontentAPI import VideoContentAPI
-
+from .resources.QuizQuestions.quizquestionAPI import QuizQuestionAPI
 from .resources.Code.run_code import RunPython
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -73,7 +73,8 @@ app.add_url_rule("/api/programmingassignments/<int:weeknumber>/marks/<int:assign
                  view_func=GetProgrammingAssignmentMarksAPI.as_view("get_programming_assignment_marks"),
                  methods=["GET"])
 
-
+# Quiz Questions
+app.add_url_rule('/api/quizquestion/<int:week>',view_func=QuizQuestionAPI.as_view('quizquestion'),methods = ["GET"])
 
 # GenAI API
 # transcript summary

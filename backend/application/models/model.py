@@ -163,7 +163,7 @@ class ProgrammingSubmissions(db.Model):
 class Quiz(db.Model):
     __tablename__ = 'quiz_questions'
     id = db.Column(db.Integer,primary_key = True, autoincrement = True)
-    number = db.Column(db.String,nullable = False)
+    number = db.Column(db.Integer,nullable = False)
     type = db.Column(db.String,nullable = False)
     question = db.Column(db.String,nullable = False)
     code_snippet = db.Column(db.String,nullable = False)
