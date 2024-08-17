@@ -156,13 +156,24 @@ export default {
         });
     },
 
-    // method to summarise lecture content
+    // method to summarize lecture content
     handleSummarise() {
+      // Extract route path
       let route = this.$route.path;
-      let week_number = parseInt(route.charAt(route.length - 3));
-      let lecture_id = parseInt(route.charAt(route.length - 1));
 
+      // Split the route path into parts
+      let routeParts = route.split('/');
+
+      // The week number will be at the second last position
+      let week_number = parseInt(routeParts[routeParts.length - 2]);
+
+      // The lecture id will be at the last position
+      let lecture_id = parseInt(routeParts[routeParts.length - 1]);
+
+      // Call the method to fetch the lecture summary
       this.fetchLectureSummary(week_number, lecture_id);
+
+      // Show the summary
       this.isShow = true;
     },
 

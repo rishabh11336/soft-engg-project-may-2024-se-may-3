@@ -53,7 +53,12 @@ export default {
     },
   },
   mounted() {
-    this.fetchWeekContent();
+    const itemId = parseInt(this.$route.params.itemId);
+    if (!isNaN(itemId)) {
+      this.fetchWeekContent(itemId);
+    } else {
+      console.error('Invalid route parameters');
+    }
   },
   watch: {
     '$route.params': {
