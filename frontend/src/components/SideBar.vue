@@ -21,8 +21,12 @@
     </div>
     <div :class="{ active: activeTab === 'ide' }" class="module" @click="activeTab = 'ide'">
       <img :src="codeIDELogo" alt="ide" @click="openModal" />
-
+      
       <div>Code IDE</div>
+    </div>
+    <div class="module" :class="{ active: activeTab === 'quiz' }" @click="activateQuiz">
+      <svg width="28" fill="#ffffff" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M1751 0v1920H169V0h1582Zm-115 112H290v9h-1v1678h1v20h1346V112Zm-234 235v321H514V347h888Z" fill-rule="evenodd"></path> </g></svg>
+      <div>Quiz</div>
     </div>
     <IdeModal :show="isModalOpen" @close="isModalOpen = false">
       <CodeEditor />
@@ -58,8 +62,15 @@ export default {
       this.activeTab = 'grade-details';
       this.grade_details();
     },
+    activateQuiz() {
+      this.activeTab = 'quiz';
+      this.quiz();
+    },
     grade_details() {
       this.$router.push({ name: 'GradeDetails' });
+    },
+    quiz() {
+      this.$router.push({ name: 'QuizQuestions' });
     }
   }
 };

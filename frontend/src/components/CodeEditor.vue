@@ -2,7 +2,7 @@
     <div class="editor-container">
         <div class="editor">
             <codemirror v-model="code" placeholder="Write your Python code here..."
-                :style="{ height: '100%', width: '100%' }" :autofocus="true" :indent-with-tab="true" :tab-size="2"
+                :style="{ height: '78%', width: '100%' }" :autofocus="true" :indent-with-tab="true" :tab-size="2"
                 :extensions="extensions" @ready="handleReady" @change="log('change', $event)" />
             <button class="run-button" @click="runCode">Run Code</button>
         </div>

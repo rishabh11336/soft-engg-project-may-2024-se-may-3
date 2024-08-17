@@ -8,6 +8,7 @@ import ProgAssign from '@/pages/ProgAssign.vue';
 import LectureVideo from '@/pages/LectureVideo.vue';
 import CodeEditor from '@/components/CodeEditor.vue';
 import GradeDetails from '@/pages/GradeDetails.vue';
+import QuizQuestions from '@/pages/QuizQuestions.vue';
 
 const routes = [
   { path: '/', component: DashBoard },
@@ -23,6 +24,8 @@ const routes = [
       { path: '', redirect: 'about' },
       { path: '/CodeEditor', component: CodeEditor },
       { path: '/grade-details', name: 'GradeDetails', component: GradeDetails },
+      // { path: '/quiz/:week', name: 'QuizQuestions', component: QuizQuestions },
+      { path: '/quiz', name: 'QuizQuestions', component: QuizQuestions },
     ],
   },
 ];

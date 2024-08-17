@@ -74,7 +74,8 @@ app.add_url_rule("/api/programmingassignments/<int:weeknumber>/marks/<int:assign
                  methods=["GET"])
 
 # Quiz Questions
-app.add_url_rule('/api/quizquestion/<int:week>',view_func=QuizQuestionAPI.as_view('quizquestion'),methods = ["GET"])
+# app.add_url_rule('/api/quizquestion/<int:week>',view_func=QuizQuestionAPI.as_view('quizquestion'),methods = ["GET"])
+app.add_url_rule('/api/quizquestion', view_func=QuizQuestionAPI.as_view('quizquestion'), methods=["GET"])
 
 # GenAI API
 # transcript summary

@@ -75,3 +75,8 @@ export const getProgrammingAssignmentMarks = (week_number, assignment_id) => {
     `${API_BASE_URL}/programmingassignments/${week_number}/marks/${assignment_id}`
   );
 };
+
+// GET REQUEST => GET QUIZ QUESTIONS
+export const getQuizQuestions = () => {
+  return axios.get(`${API_BASE_URL}/quizquestion`);
+};
