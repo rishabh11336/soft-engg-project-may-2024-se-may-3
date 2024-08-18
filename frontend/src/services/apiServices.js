@@ -80,3 +80,8 @@ export const getProgrammingAssignmentMarks = (week_number, assignment_id) => {
 export const getQuizQuestions = () => {
   return axios.get(`${API_BASE_URL}/quizquestion`);
 };
+
+// GET REQUEST => GET QUIZ FEEDBACK
+export const getQuizFeedback = () => {
+  return axios.get(`${API_BASE_URL}/genai/quizreview`);
+};

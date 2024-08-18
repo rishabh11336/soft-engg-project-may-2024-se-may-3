@@ -8,9 +8,10 @@ class QuizReview(Resource):
         quiz_questions = Quiz.query.all()
 
         if not quiz_questions:
-            return {'message' : "Some error occured"}, 404
+            return {'message': "No quiz questions found"}, 404
         
-        response = {'response': quiz_review(quiz_records=quiz_questions)}, 200
+        feedback = quiz_review(quiz_records=quiz_questions)
+        return jsonify({'response': feedback})
 
     def post(self):
         pass

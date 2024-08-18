@@ -46,6 +46,10 @@
         </div>
       </div>
     </div>
+    <div v-if="feedback">
+      <h3>Feedback</h3>
+      <div v-html="formattedFeedback"></div> <!-- Render formatted feedback -->
+    </div>
   </div>
   <div v-else>
     <p>Loading...</p>
@@ -53,7 +57,7 @@
 </template>
 
 <script>
-import { getQuizQuestions } from '@/services/apiServices';
+import { getQuizQuestions, getQuizFeedback } from '@/services/apiServices';
 
 export default {
   name: 'QuizQuestions',
@@ -61,7 +65,13 @@ export default {
     return {
       quizQuestions: [],
       selectedAnswers: {},
+      feedback: '',
     };
+  },
+  computed: {
+    formattedFeedback() {
+      return this.formatFeedback(this.feedback);
+    },
   },
   created() {
     this.fetchQuizQuestions();
@@ -73,9 +83,20 @@ export default {
           console.log('Quiz Questions:', response.data);
           this.quizQuestions = response.data;
           this.initializeSelectedAnswers();
+          this.fetchFeedback();
         })
         .catch((error) => {
           console.error('Error fetching quiz questions:', error);
+        });
+    },
+    fetchFeedback() {
+      getQuizFeedback()
+        .then(response => {
+          console.log('Feedback:', response.data.response);
+          this.feedback = response.data.response;
+        })
+        .catch(error => {
+          console.error('Error fetching feedback:', error);
         });
     },
     initializeSelectedAnswers() {
@@ -88,6 +109,11 @@ export default {
     },
     getFeedbackClass(question) {
       return this.isCorrect(question) ? 'correct' : 'incorrect';
+    },
+    formatFeedback(feedback) {
+      return feedback
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+        .replace(/\n/g, '<br>'); 
     },
   },
 };

@@ -218,36 +218,92 @@ def PAfeedback(question, code):
     raise ValueError("All tokens have been exhausted.")
 
 #QUIZ REVIEW FROM HERE
+# def quiz_review(quiz_records):
+#     #! Entire rows should be put as the input
+#     feedback = ""
+#     incorrect_questions = []
+#     topic_areas = {}
+
+#     # Iterate through the quiz data from the database query
+#     for row in quiz_records:
+#         question_id = row.QuestionNumber
+#         question_type = row.QuestionType
+#         question = row.Question
+#         code_snippet = getattr(row, 'CodeSnippet', '')  # Use getattr() to handle missing 'CodeSnippet'
+#         correct_answer1 = row.Answer1
+#         correct_answer2 = row.Answer2
+#         correct_answer3 = row.Answer3
+#         correct_answer4 = row.Answer4
+
+#         user_answer1 = row.YourAnswer1
+#         user_answer2 = row.YourAnswer2
+#         user_answer3 = row.YourAnswer3
+#         user_answer4 = row.YourAnswer4
+
+#         correct_answers = [correct_answer1, correct_answer2, correct_answer3, correct_answer4]
+#         user_answers_list = [user_answer1, user_answer2, user_answer3, user_answer4]
+
+#         # Clean empty strings from the correct answers and user answers
+#         correct_answers = [ans for ans in correct_answers if ans]
+#         user_answers_list = [ans for ans in user_answers_list if ans]
+
+#         # Check if the user's answers are correct
+#         if question_type == "Multi-choice":
+#             correct_answer = correct_answers[0]
+#             user_answer = user_answers_list[0] if user_answers_list else ""
+
+#             if user_answer != correct_answer:
+#                 incorrect_questions.append((question_id, question, correct_answer, user_answer))
+#                 update_topic_areas(topic_areas, question)
+
+#         elif question_type == "Multi-select":
+#             if set(user_answers_list) != set(correct_answers):
+#                 incorrect_questions.append((question_id, question, ', '.join(correct_answers), ', '.join(user_answers_list)))
+#                 update_topic_areas(topic_areas, question)
+
+#     # Generate detailed feedback and recommendations
+#     if incorrect_questions:
+#         feedback += "Here is a summary of the questions you answered incorrectly and the areas you need to focus on:\n\n"
+#         for question_id, question, correct_answer, user_answer in incorrect_questions:
+#             feedback += f"Question {question_id}: {question}\n"
+#             feedback += f"Your answer: {user_answer}\n"
+#             feedback += f"Correct answer: {correct_answer}\n\n"
+#             feedback += generate_explanation(question, code_snippet, correct_answer, user_answer)
+
+#         feedback += "Based on your performance, here are some areas you should review:\n"
+#         for topic, count in topic_areas.items():
+#             feedback += f"- {topic}: You missed {count} question(s) related to this concept.\n"
+#     else:
+#         feedback = "Great job! You answered all questions correctly."
+
+#     return feedback
+
 def quiz_review(quiz_records):
-    #! Entire rows should be put as the input
     feedback = ""
     incorrect_questions = []
     topic_areas = {}
 
-    # Iterate through the quiz data from the database query
     for row in quiz_records:
-        question_id = row.QuestionNumber
-        question_type = row.QuestionType
-        question = row.Question
-        code_snippet = getattr(row, 'CodeSnippet', '')  # Use getattr() to handle missing 'CodeSnippet'
-        correct_answer1 = row.Answer1
-        correct_answer2 = row.Answer2
-        correct_answer3 = row.Answer3
-        correct_answer4 = row.Answer4
+        question_id = row.id
+        question_type = row.type
+        question = row.question
+        code_snippet = row.code_snippet
+        correct_answer1 = row.answer1
+        correct_answer2 = row.answer2
+        correct_answer3 = row.answer3
+        correct_answer4 = row.answer4
 
-        user_answer1 = row.YourAnswer1
-        user_answer2 = row.YourAnswer2
-        user_answer3 = row.YourAnswer3
-        user_answer4 = row.YourAnswer4
+        user_answer1 = row.youranswer1
+        user_answer2 = row.youranswer2
+        user_answer3 = row.youranswer3
+        user_answer4 = row.youranswer4
 
         correct_answers = [correct_answer1, correct_answer2, correct_answer3, correct_answer4]
         user_answers_list = [user_answer1, user_answer2, user_answer3, user_answer4]
 
-        # Clean empty strings from the correct answers and user answers
         correct_answers = [ans for ans in correct_answers if ans]
         user_answers_list = [ans for ans in user_answers_list if ans]
 
-        # Check if the user's answers are correct
         if question_type == "Multi-choice":
             correct_answer = correct_answers[0]
             user_answer = user_answers_list[0] if user_answers_list else ""
@@ -261,7 +317,6 @@ def quiz_review(quiz_records):
                 incorrect_questions.append((question_id, question, ', '.join(correct_answers), ', '.join(user_answers_list)))
                 update_topic_areas(topic_areas, question)
 
-    # Generate detailed feedback and recommendations
     if incorrect_questions:
         feedback += "Here is a summary of the questions you answered incorrectly and the areas you need to focus on:\n\n"
         for question_id, question, correct_answer, user_answer in incorrect_questions:
@@ -277,6 +332,7 @@ def quiz_review(quiz_records):
         feedback = "Great job! You answered all questions correctly."
 
     return feedback
+
 
 # Update topic areas based on question content
 #! This is a helper functions
