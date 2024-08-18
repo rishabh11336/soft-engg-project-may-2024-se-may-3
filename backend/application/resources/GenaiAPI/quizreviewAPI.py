@@ -1,7 +1,7 @@
 from application.models.model import Quiz
 from flask_restful import Resource
 from flask import jsonify,request
-from genAI import quiz_review
+from .genAI import quiz_review
 
 class QuizReview(Resource):
     def get(self):

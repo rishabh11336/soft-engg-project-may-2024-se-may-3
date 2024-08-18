@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from application.models.model import ProgrammingAssignments, ProgrammingSubmissions
-from genAI import PAfeedback
+from .genAI import PAfeedback
 class ProgrammingFeeback(Resource):
     def get(self,week = None):
         programming_submission = ProgrammingSubmissions.query.filter_by(weeknumber = week)

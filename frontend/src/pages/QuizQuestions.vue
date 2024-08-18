@@ -1,111 +1,98 @@
 <template>
-    <div v-if="quizQuestions.length">
-      <h2>Quiz</h2>
-      <div class="quiz-wrapper">
-        <div
-          class="question-answer"
-          v-for="(question, index) in quizQuestions"
-          :key="question.id"
-        >
-          <div class="question-wrapper">
-            <p>{{ index + 1 }}. {{ question.question }}</p> 
-            <strong>1 point</strong>
-          </div>
-          <div v-if="question.code_snippet" class="question">
-            {{ question.code_snippet }}
-          </div>
-          <div v-if="question.question_type === 'Multi-choice'"> 
-            <div v-if="question.option1">
+  <div v-if="quizQuestions.length">
+    <h2>Quiz</h2>
+    <div class="quiz-wrapper">
+      <div
+        class="question-answer"
+        v-for="(question, index) in quizQuestions"
+        :key="question.id"
+      >
+        <div class="question-wrapper">
+          <p>{{ index + 1 }}. {{ question.question }}</p> 
+          <strong>1 point</strong>
+        </div>
+        <div v-if="question.code_snippet" class="question">
+          <pre>{{ question.code_snippet }}</pre>
+        </div>
+        <div v-if="question.question_type === 'Multi-choice'"> 
+          <div v-for="optionNum in 4" :key="optionNum">
+            <div v-if="question[`option${optionNum}`]">
               <input
                 type="radio"
                 :name="`answer_${question.id}`"
-                :id="`option1_${question.id}`"
-                :value="question.option1"
+                :id="`option${optionNum}_${question.id}`"
+                :value="question[`option${optionNum}`]"
                 v-model="selectedAnswers[question.id]"
+                :disabled="true"
               />
-              <label :for="`option1_${question.id}`">{{ question.option1 }}</label>
-            </div>
-            <div v-if="question.option2">
-              <input
-                type="radio"
-                :name="`answer_${question.id}`"
-                :id="`option2_${question.id}`"
-                :value="question.option2"
-                v-model="selectedAnswers[question.id]"
-              />
-              <label :for="`option2_${question.id}`">{{ question.option2 }}</label>
-            </div>
-            <div v-if="question.option3">
-              <input
-                type="radio"
-                :name="`answer_${question.id}`"
-                :id="`option3_${question.id}`"
-                :value="question.option3"
-                v-model="selectedAnswers[question.id]"
-              />
-              <label :for="`option3_${question.id}`">{{ question.option3 }}</label>
-            </div>
-            <div v-if="question.option4">
-              <input
-                type="radio"
-                :name="`answer_${question.id}`"
-                :id="`option4_${question.id}`"
-                :value="question.option4"
-                v-model="selectedAnswers[question.id]"
-              />
-              <label :for="`option4_${question.id}`">{{ question.option4 }}</label>
-            </div>
-          </div>
-          <div v-else>
-            <div class="answer">
-              <input
-                type="text"
-                placeholder="Answer..."
-                v-model="selectedAnswers[question.id]"
-              />
+              <label :for="`option${optionNum}_${question.id}`">{{ question[`option${optionNum}`] }}</label>
             </div>
           </div>
         </div>
-        <button @click="submitAnswers" class="submit">Submit Answers</button>
+        <div v-else>
+          <div class="answer">
+            <input
+              type="text"
+              :value="selectedAnswers[question.id]"
+              disabled
+            />
+          </div>
+        </div>
+        <div class="feedback" :class="getFeedbackClass(question)">
+          <p v-if="isCorrect(question)">Correct!</p>
+          <p v-else>
+            Incorrect. The correct answer is: {{ question.answer1 }}
+          </p>
+        </div>
       </div>
     </div>
-    <div v-else>
-      <p>Loading...</p>
-    </div>
-  </template>
-  
-  
-  <script>
-  import { getQuizQuestions } from '@/services/apiServices';
-  
-  export default {
-    name: 'QuizQuestions',
-    data() {
-      return {
-        quizQuestions: [],
-        selectedAnswers: {},
-      };
+  </div>
+  <div v-else>
+    <p>Loading...</p>
+  </div>
+</template>
+
+<script>
+import { getQuizQuestions } from '@/services/apiServices';
+
+export default {
+  name: 'QuizQuestions',
+  data() {
+    return {
+      quizQuestions: [],
+      selectedAnswers: {},
+    };
+  },
+  created() {
+    this.fetchQuizQuestions();
+  },
+  methods: {
+    fetchQuizQuestions() {
+      getQuizQuestions()
+        .then((response) => {
+          console.log('Quiz Questions:', response.data);
+          this.quizQuestions = response.data;
+          this.initializeSelectedAnswers();
+        })
+        .catch((error) => {
+          console.error('Error fetching quiz questions:', error);
+        });
     },
-    created() {
-      this.fetchQuizQuestions();
+    initializeSelectedAnswers() {
+      this.quizQuestions.forEach(question => {
+        this.selectedAnswers[question.id] = question.youranswer1;
+      });
     },
-    methods: {
-      fetchQuizQuestions() {
-        getQuizQuestions()
-          .then((response) => {
-            console.log('Quiz Questions:', response.data);
-            this.quizQuestions = response.data;
-          })
-          .catch((error) => {
-            console.error('Error fetching quiz questions:', error);
-          });
-      },
-      submitAnswers() {
-        // Implementation for submitting answers
-      },
+    isCorrect(question) {
+      return question.youranswer1 === question.answer1;
     },
-  };
-  </script>
+    getFeedbackClass(question) {
+      return this.isCorrect(question) ? 'correct' : 'incorrect';
+    },
+  },
+};
+</script>
+
 
 <style scoped>
 .quiz-wrapper {
@@ -186,4 +173,25 @@ button {
     color: green;
     font-size: 16px;
 }
+
+.feedback {
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 4px;
+}
+.correct {
+  background-color: #d4edda;
+  color: #155724;
+}
+.incorrect {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+pre {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
 </style>
